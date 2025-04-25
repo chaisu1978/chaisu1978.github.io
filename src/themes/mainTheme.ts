@@ -24,7 +24,7 @@ const mainTheme = createTheme({
     warning: { main: '#3a2315' },
     info: { main: '#152b3a' },
     success: { main: '#153a1d' },
-    divider: '#97a1b2',
+    divider: '#3a4459',
   },
   typography: {
     fontFamily: '"Sora", sans-serif',
