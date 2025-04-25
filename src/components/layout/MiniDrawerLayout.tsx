@@ -18,10 +18,15 @@ import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { navLinks } from "../../constants/navLinks";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const drawerWidth = 200;
+
+const MotionDiv = motion.div as React.ComponentType<
+  React.HTMLAttributes<HTMLDivElement> & import("framer-motion").MotionProps
+>;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -104,6 +109,14 @@ export default function MiniDrawerLayout() {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
+  const [activeSection, setActiveSection] = useState("about");
+
+  const handleNavClick = (id: string) => {
+    setActiveSection(id);
+    const section = document.getElementById(id);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -136,26 +149,41 @@ export default function MiniDrawerLayout() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["About", "Projects", "Experience", "Contact"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+          {navLinks.map(({ label, id, icon: Icon }) => (
+            <ListItem key={id} disablePadding sx={{ display: "block" }}>
               <ListItemButton
+                onClick={() => handleNavClick(id)}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+                  color:
+                    activeSection === id ? "var(--tertiary-300)" : "inherit",
+                  backgroundColor:
+                    activeSection === id ? "action.selected" : "transparent",
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    color: theme.palette.text.primary,
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
+                    color:
+                      activeSection === id ? "var(--tertiary-300)" : "inherit",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <Icon size={20} />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={label}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    transition: "opacity 0.3s ease",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -164,13 +192,50 @@ export default function MiniDrawerLayout() {
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography variant="h4" gutterBottom>
-          Terrence Hosang's Portfolio
-        </Typography>
-        <Typography variant="body1">
-          Welcome to my portfolio! Here you will find information about my
-          projects, skills, and experience.
-        </Typography>
+        <MotionDiv
+          id="about"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Typography variant="h4" gutterBottom>
+            About
+          </Typography>
+          <Typography>Brief about me...</Typography>
+        </MotionDiv>
+        <MotionDiv
+          id="projects"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Projects
+          </Typography>
+          <Typography>Some cool things I’ve built.</Typography>
+        </MotionDiv>
+        <MotionDiv
+          id="experience"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Experience
+          </Typography>
+          <Typography>Work history and highlights.</Typography>
+        </MotionDiv>
+        <MotionDiv
+          id="contact"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Contact
+          </Typography>
+          <Typography>Let’s connect!</Typography>
+        </MotionDiv>
       </Box>
     </Box>
   );
