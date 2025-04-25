@@ -1,68 +1,108 @@
+/* import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+
+/* Color Variables */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --primary-100: #dbe7ff;
+  --primary-200: #bcd1f8;
+  --primary-300: #8fa8d8;
+  --primary-400: #6784b8;
+  --primary-500: #466399;
+  --primary-600: #273f6c;
+  --primary-700: #10213f;
+  --primary-800: #030813;
+  --primary-900: #000000;
+  --secondary-100: #fadbff;
+  --secondary-200: #f1bcf8;
+  --secondary-300: #d08fd8;
+  --secondary-400: #af67b8;
+  --secondary-500: #8f4699;
+  --secondary-600: #64276c;
+  --secondary-700: #3a103f;
+  --secondary-800: #110313;
+  --secondary-900: #000000;
+  --tertiary-100: #66ffed;
+  --tertiary-200: #4cffea;
+  --tertiary-300: #31f7e0;
+  --tertiary-400: #15d7c0;
+  --tertiary-500: #00b7a2;
+  --tertiary-600: #008a7a;
+  --tertiary-700: #005e53;
+  --tertiary-800: #00312b;
+  --tertiary-900: #000504;
+  --neutral-100: #ffffff;
+  --neutral-200: #ffffff;
+  --neutral-300: #f2f2f2;
+  --neutral-400: #c7cbd2;
+  --neutral-500: #97a1b2;
+  --neutral-600: #647085;
+  --neutral-700: #3a4459;
+  --neutral-800: #181f2c;
+  --neutral-900: #000000;
+  --green-100: #f4fff7;
+  --green-200: #d1f3d9;
+  --green-300: #a0d3ac;
+  --green-400: #76b384;
+  --green-500: #529362;
+  --green-600: #2f673c;
+  --green-700: #153a1d;
+  --green-800: #030e06;
+  --green-900: #000000;
+  --orange-100: #fff8f4;
+  --orange-200: #f3ded1;
+  --orange-300: #d3b4a0;
+  --orange-400: #b38e76;
+  --orange-500: #936b52;
+  --orange-600: #67442f;
+  --orange-700: #3a2315;
+  --orange-800: #0e0703;
+  --orange-900: #000000;
+  --red-100: #fff4f4;
+  --red-200: #f3d1d1;
+  --red-300: #d3a0a0;
+  --red-400: #b37676;
+  --red-500: #935252;
+  --red-600: #672f2f;
+  --red-700: #3a1515;
+  --red-800: #0e0303;
+  --red-900: #000000;
+  --blue-100: #f4faff;
+  --blue-200: #d1e5f3;
+  --blue-300: #a0bfd3;
+  --blue-400: #769bb3;
+  --blue-500: #527993;
+  --blue-600: #2f5067;
+  --blue-700: #152b3a;
+  --blue-800: #03090e;
+  --blue-900: #000000;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+
+/* reset  */
+* {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+
+/* remove default margin and padding */
+body, h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", serif;
 }
 
 body {
+  font-family: 'Sora', sans-serif;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  background-color: var(--neutral-500);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+p {
+  font-family: 'Sora', sans-serif;
 }
