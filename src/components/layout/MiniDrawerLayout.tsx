@@ -21,6 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { navLinks } from "../../constants/navLinks";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import AboutSection from "../sections/AboutSection";
 
 const drawerWidth = 200;
 
@@ -114,7 +115,12 @@ export default function MiniDrawerLayout() {
   const handleNavClick = (id: string) => {
     setActiveSection(id);
     const section = document.getElementById(id);
-    if (section) section.scrollIntoView({ behavior: "smooth" });
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+    setTimeout(() => {
+      handleDrawerClose();
+    }, 300); // wait 300ms to start collapsing after scroll
   };
 
   return (
@@ -127,13 +133,36 @@ export default function MiniDrawerLayout() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ marginRight: 5, ...(open && { display: "none" }) }}
+            sx={{
+              //   marginRight: { xs: 0, sm: 0 },
+              display: { xs: "none", sm: open ? "none" : "inline-flex" },
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Terrence Hosang
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              component="img"
+              src="/THosang.svg"
+              alt="Terrence Hosang Logo"
+              sx={{
+                height: { xs: 40, sm: 48 }, // smaller logo on phone
+                width: "auto",
+                marginLeft: { xs: 0, sm: 2 },
+              }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                // Hide on extra-small screens
+                display: { xs: "block", sm: "block" },
+              }}
+            >
+              Terrence Hosang
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -158,7 +187,7 @@ export default function MiniDrawerLayout() {
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                   color:
-                    activeSection === id ? "var(--tertiary-300)" : "inherit",
+                    activeSection === id ? "var(--tertiary-100)" : "inherit",
                   backgroundColor:
                     activeSection === id ? "action.selected" : "transparent",
                   "&:hover": {
@@ -172,7 +201,7 @@ export default function MiniDrawerLayout() {
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                     color:
-                      activeSection === id ? "var(--tertiary-300)" : "inherit",
+                      activeSection === id ? "var(--tertiary-100)" : "inherit",
                   }}
                 >
                   <Icon size={20} />
@@ -190,19 +219,9 @@ export default function MiniDrawerLayout() {
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <DrawerHeader />
-        <MotionDiv
-          id="about"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Typography variant="h4" gutterBottom>
-            About
-          </Typography>
-          <Typography>Brief about me...</Typography>
-        </MotionDiv>
+        <AboutSection />
         <MotionDiv
           id="projects"
           initial={{ opacity: 0, y: 40 }}
