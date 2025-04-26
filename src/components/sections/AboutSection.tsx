@@ -1,13 +1,17 @@
 import { Box, Typography, Container } from "@mui/material";
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  id: string;
+}
+
+export default function AboutSection({ id }: AboutSectionProps) {
   return (
     <Box
-      id="about"
+      id={id}
       sx={{
         position: "relative",
         width: "100%",
-        height: "100vh", // full screen height
+        height: "75vh", // full screen height
         overflow: "hidden",
       }}
     >

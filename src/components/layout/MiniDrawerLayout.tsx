@@ -19,9 +19,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { navLinks } from "../../constants/navLinks";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import AboutSection from "../sections/AboutSection";
+import { useScrollSpy } from "../../hooks/useScrollSpy";
+import { useState } from "react";
 
 const drawerWidth = 200;
 
@@ -110,17 +111,27 @@ export default function MiniDrawerLayout() {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-  const [activeSection, setActiveSection] = useState("about");
+  const sectionIds = ["about", "projects", "experience", "contact"];
+  const [manualActiveSection, setManualActiveSection] = useState<
+    string | undefined
+  >("about");
+
+  const observedSection = useScrollSpy(sectionIds, 64);
+
+  const activeSection = manualActiveSection || observedSection;
 
   const handleNavClick = (id: string) => {
-    setActiveSection(id);
+    setManualActiveSection(id); // Highlight immediately
     const section = document.getElementById(id);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      const yOffset = -64;
+      const y = section.offsetTop + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
     setTimeout(() => {
       handleDrawerClose();
-    }, 300); // wait 300ms to start collapsing after scroll
+      setManualActiveSection(undefined); // ✅ Release back to scroll spy after 1s
+    }, 300); // Adjust delay if needed
   };
 
   return (
@@ -134,7 +145,6 @@ export default function MiniDrawerLayout() {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              //   marginRight: { xs: 0, sm: 0 },
               display: { xs: "none", sm: open ? "none" : "inline-flex" },
             }}
           >
@@ -221,17 +231,19 @@ export default function MiniDrawerLayout() {
 
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <DrawerHeader />
-        <AboutSection />
+        <AboutSection id="about" />
         <MotionDiv
           id="projects"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Typography variant="h4" gutterBottom>
-            Projects
-          </Typography>
-          <Typography>Some cool things I’ve built.</Typography>
+          <Box height={"90vh"}>
+            <Typography variant="h4" gutterBottom>
+              Projects
+            </Typography>
+            <Typography>Some cool things I’ve built.</Typography>
+          </Box>
         </MotionDiv>
         <MotionDiv
           id="experience"
@@ -239,10 +251,12 @@ export default function MiniDrawerLayout() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Typography variant="h4" gutterBottom>
-            Experience
-          </Typography>
-          <Typography>Work history and highlights.</Typography>
+          <Box height={"90vh"}>
+            <Typography variant="h4" gutterBottom>
+              Experience
+            </Typography>
+            <Typography>Work history and highlights.</Typography>
+          </Box>
         </MotionDiv>
         <MotionDiv
           id="contact"
@@ -250,10 +264,12 @@ export default function MiniDrawerLayout() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Typography variant="h4" gutterBottom>
-            Contact
-          </Typography>
-          <Typography>Let’s connect!</Typography>
+          <Box height={"100vh"}>
+            <Typography variant="h4" gutterBottom>
+              Contact
+            </Typography>
+            <Typography>Let’s connect!</Typography>
+          </Box>
         </MotionDiv>
       </Box>
     </Box>
