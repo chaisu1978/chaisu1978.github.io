@@ -238,7 +238,7 @@ export default function MiniDrawerLayout() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Box height={"90vh"}>
+          <Box height={"90vh"} p={3}>
             <Typography variant="h4" gutterBottom>
               Projects
             </Typography>
@@ -251,7 +251,7 @@ export default function MiniDrawerLayout() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Box height={"90vh"}>
+          <Box height={"90vh"} p={3}>
             <Typography variant="h4" gutterBottom>
               Experience
             </Typography>
@@ -264,7 +264,7 @@ export default function MiniDrawerLayout() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Box height={"100vh"}>
+          <Box height={"100vh"} p={3}>
             <Typography variant="h4" gutterBottom>
               Contact
             </Typography>
