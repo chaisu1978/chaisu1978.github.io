@@ -74,7 +74,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundColor: "rgba(24,31,44,0.65)",
+          backgroundColor: "rgba(24,31,44,0.7)",
           zIndex: 1,
         }}
       />
@@ -107,12 +107,12 @@ export default function AboutSection({ id }: AboutSectionProps) {
             maxWidth: { xs: "100%", md: "50%" },
             textAlign: { xs: "left", md: "left" },
             textShadow:
-              "0 0 15px rgba(0,0,0,0.8),0 0 15px rgba(0,0,0,0.8),0 0 15px rgba(0,0,0,0.8)",
+              "0 0 16px rgba(0,0,0,0.9),0 0 16px rgba(0,0,0,0.9),0 0 16px rgba(0,0,0,0.9)",
           }}
         >
           {[
             <Typography key="h2" variant="h2" gutterBottom>
-              I’m Terrence
+              Hi, I’m Terrence
             </Typography>,
             <Typography key="h5" variant="h5">
               Full-Stack Developer | Designer | Problem Solver
@@ -214,11 +214,11 @@ export default function AboutSection({ id }: AboutSectionProps) {
           <ArrowDownwardIcon
             sx={{
               fontSize: "1.2rem",
-              color: "var(--tertiary-600)",
+              color: "var(--tertiary-700)",
               cursor: "pointer",
             }}
             onClick={() => {
-              const el = document.getElementById("projects");
+              const el = document.getElementById("skills");
               if (el) {
                 window.scrollTo({
                   top: el.offsetTop - 64,

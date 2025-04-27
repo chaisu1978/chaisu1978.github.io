@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -20,9 +21,10 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { navLinks } from "../../constants/navLinks";
 import { motion } from "framer-motion";
-import AboutSection from "../sections/AboutSection";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
-import { useState } from "react";
+
+import AboutSection from "../sections/AboutSection";
+import SkillsSection from "../sections/SkillsSection";
 
 const drawerWidth = 200;
 
@@ -111,7 +113,7 @@ export default function MiniDrawerLayout() {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-  const sectionIds = ["about", "projects", "experience", "contact"];
+  const sectionIds = ["about", "skills", "journey", "projects", "connect"];
   const [manualActiveSection, setManualActiveSection] = useState<
     string | undefined
   >("about");
@@ -232,6 +234,20 @@ export default function MiniDrawerLayout() {
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <DrawerHeader />
         <AboutSection id="about" />
+        <SkillsSection id="skills" />
+        <MotionDiv
+          id="journey"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Box height={"90vh"} p={3}>
+            <Typography variant="h4" gutterBottom>
+              Journey
+            </Typography>
+            <Typography>My path to where I am today.</Typography>
+          </Box>
+        </MotionDiv>
         <MotionDiv
           id="projects"
           initial={{ opacity: 0, y: 40 }}
@@ -240,33 +256,20 @@ export default function MiniDrawerLayout() {
         >
           <Box height={"90vh"} p={3}>
             <Typography variant="h4" gutterBottom>
-              Projects
+              Selected Projects
             </Typography>
-            <Typography>Some cool things I’ve built.</Typography>
+            <Typography>Some of my work.</Typography>
           </Box>
         </MotionDiv>
         <MotionDiv
-          id="experience"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Box height={"90vh"} p={3}>
-            <Typography variant="h4" gutterBottom>
-              Experience
-            </Typography>
-            <Typography>Work history and highlights.</Typography>
-          </Box>
-        </MotionDiv>
-        <MotionDiv
-          id="contact"
+          id="connect"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <Box height={"100vh"} p={3}>
             <Typography variant="h4" gutterBottom>
-              Contact
+              Connect / Contact
             </Typography>
             <Typography>Let's connect!</Typography>
           </Box>

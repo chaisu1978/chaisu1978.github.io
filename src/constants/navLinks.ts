@@ -3,7 +3,8 @@ import { FaUser, FaLaptopCode, FaBriefcase, FaEnvelope } from "react-icons/fa";
 
 export const navLinks = [
   { label: "About", id: "about", icon: FaUser },
-  { label: "Projects", id: "projects", icon: FaLaptopCode },
-  { label: "Experience", id: "experience", icon: FaBriefcase },
-  { label: "Contact", id: "contact", icon: FaEnvelope },
+  { label: "Skills", id: "skills", icon: FaLaptopCode },
+  { label: "Journey", id: "journey", icon: FaBriefcase },
+  { label: "Projects", id: "projects", icon: FaEnvelope },
+  { label: "Connect", id: "connect", icon: FaEnvelope },
 ];
