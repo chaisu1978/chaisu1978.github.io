@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { motion, useScroll, useTransform } from "framer-motion";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 /* MUI Box wrapped for stagger + sx */
 const MotionBox = motion(Box as any);
@@ -104,14 +105,14 @@ export default function AboutSection({ id }: AboutSectionProps) {
             flexDirection: "column",
             color: "white",
             maxWidth: { xs: "100%", md: "50%" },
-            textAlign: { xs: "center", md: "left" },
+            textAlign: { xs: "left", md: "left" },
             textShadow:
-              "0 0 5px rgba(0,0,0,0.8),0 0 10px rgba(0,0,0,0.8),0 0 15px rgba(0,0,0,0.8)",
+              "0 0 15px rgba(0,0,0,0.8),0 0 15px rgba(0,0,0,0.8),0 0 15px rgba(0,0,0,0.8)",
           }}
         >
           {[
-            <Typography key="h1" variant="h2" gutterBottom>
-              Hi, I’m Terrence
+            <Typography key="h2" variant="h2" gutterBottom>
+              I’m Terrence
             </Typography>,
             <Typography key="h5" variant="h5">
               Full-Stack Developer | Designer | Problem Solver
@@ -153,13 +154,13 @@ export default function AboutSection({ id }: AboutSectionProps) {
                   }
                 }}
                 sx={{
-                  backgroundColor: "var(--tertiary-700)",
+                  backgroundColor: "var(--secondary-700)",
                   color: "text.primary",
                   px: 3,
                   py: 1.5,
                   borderRadius: "30px",
                   fontWeight: "bold",
-                  "&:hover": { backgroundColor: "var(--secondary-700)" },
+                  "&:hover": { backgroundColor: "var(--tertiary-700)" },
                 }}
               >
                 See Projects
@@ -181,9 +182,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             sx={{
               mt: { xs: 4, md: 0 },
               maxWidth: 300,
-              borderRadius: "16px",
               objectFit: "cover",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
             }}
           />
         </motion.div>
@@ -196,23 +195,38 @@ export default function AboutSection({ id }: AboutSectionProps) {
         transition={{ delay: 2 }}
         style={{
           position: "absolute",
-          bottom: 20,
+          bottom: 2,
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 3,
           fontSize: "2rem",
-          color: "white",
+          color: "text.primary",
         }}
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
+          animate={{ y: [0, 12, 0] }}
           transition={{
-            duration: 1.5,
+            duration: 3.7,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
-          ↓
+          <ArrowDownwardIcon
+            sx={{
+              fontSize: "1.2rem",
+              color: "var(--tertiary-600)",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              const el = document.getElementById("projects");
+              if (el) {
+                window.scrollTo({
+                  top: el.offsetTop - 64,
+                  behavior: "smooth",
+                });
+              }
+            }}
+          />
         </motion.div>
       </motion.div>
     </Box>

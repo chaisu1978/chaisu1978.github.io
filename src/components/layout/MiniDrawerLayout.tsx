@@ -268,7 +268,7 @@ export default function MiniDrawerLayout() {
             <Typography variant="h4" gutterBottom>
               Contact
             </Typography>
-            <Typography>Let’s connect!</Typography>
+            <Typography>Let's connect!</Typography>
           </Box>
         </MotionDiv>
       </Box>
