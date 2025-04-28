@@ -20,20 +20,20 @@ export const skillsList = [
     { name: "Docker", icon: "logos:docker-icon" },
     { name: "Proxmox", icon: "simple-icons:proxmox" }, // SimpleIcons has it
     { name: "VMware", icon: "logos:vmware" },
-    { name: "Hyper-V", icon: "simple-icons:microsoft" }, // Use Windows logo
+    { name: "Hyper-V", icon: "devicon:hyperv" }, // Use Windows logo
   
     // Microsoft Systems
     { name: "Active Directory", icon: "simple-icons:microsoft" },
     { name: "Exchange Server", icon: "simple-icons:microsoft" },
-    { name: "SQL Server", icon: "simple-icons:microsoftsqlserver" }, 
-    { name: "TMG Firewall", icon: "material-symbols:firewall" }, // Using generic firewall icon
+    { name: "SQL Server", icon: "devicon:microsoftsqlserver" }, 
+    { name: "TMG Firewall", icon: "mdi:firewall" }, // Using generic firewall icon
     { name: "Windows Server", icon: "simple-icons:microsoft" },
   
     // DevOps
     { name: "Git", icon: "logos:git-icon" },
     { name: "GitHub Actions", icon: "logos:github-actions" },
-    { name: "YAML", icon: "logos:file-type-yaml" },
-    { name: "CI/CD", icon: "logos:circleci-icon" },
+    { name: "YAML", icon: "vscode-icons:file-type-yaml-official" },
+    { name: "CI/CD", icon: "clarity:ci-cd-line" },
   
     // Cybersecurity
     { name: "CEH", icon: "mdi:shield-lock-outline" },

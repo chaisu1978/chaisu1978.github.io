@@ -201,7 +201,7 @@ export default function MiniDrawerLayout() {
                   color:
                     activeSection === id ? "var(--tertiary-100)" : "inherit",
                   backgroundColor:
-                    activeSection === id ? "action.selected" : "transparent",
+                    activeSection === id ? "var(--primary-600)" : "transparent",
                   "&:hover": {
                     backgroundColor: "action.hover",
                   },
@@ -216,7 +216,7 @@ export default function MiniDrawerLayout() {
                       activeSection === id ? "var(--tertiary-100)" : "inherit",
                   }}
                 >
-                  <Icon size={20} />
+                  <Icon />
                 </ListItemIcon>
                 <ListItemText
                   primary={label}
