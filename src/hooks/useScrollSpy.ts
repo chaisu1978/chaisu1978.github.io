@@ -22,7 +22,7 @@ export function useScrollSpy(sectionIds: string[], offset = 0) {
       },
       {
         rootMargin: `-${offset}px 0px 0px 0px`,
-        threshold: 0.65, // ✅ important! triggers when 65% visible
+        threshold: 0.40, // ✅ important! triggers when 45% visible
       }
     );
 
