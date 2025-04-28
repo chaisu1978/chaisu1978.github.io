@@ -1,40 +1,85 @@
 export const skillsList = [
-    // Frontend
-    { name: "React", icon: "logos:react" },
-    { name: "JavaScript", icon: "logos:javascript" },
-    { name: "HTML5", icon: "logos:html-5" },
-    { name: "CSS3", icon: "logos:css-3" },
-    { name: "Material UI", icon: "logos:material-ui" },
-    { name: "Framer Motion", icon: "ph:framer-logo-duotone" },
-    { name: "Vite", icon: "logos:vitejs" },
+  {
+    group: "Frontend Development",
+    skills: [
+      { name: "HTML5", icon: "logos:html-5" },
+      { name: "JavaScript", icon: "logos:javascript" },
+      { name: "CSS3", icon: "logos:css-3" },
+      { name: "Material UI", icon: "logos:material-ui" },
+      { name: "Framer Motion", icon: "ph:framer-logo-duotone" },
+      { name: "Vite", icon: "logos:vitejs" },
+      { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+      { name: "Bootstrap", icon: "logos:bootstrap" },
+      { name: "jQuery", icon: "devicon:jquery" },
+      { name: "TypeScript", icon: "logos:typescript-icon" },
+      { name: "React", icon: "logos:react" },
+      { name: "Angular", icon: "logos:angular-icon" },
+      { name: "Vue.js", icon: "logos:vue" },
+    ],
+  },
+  {
+    group: "Backend Development",
+    skills: [
+      { name: "Python", icon: "logos:python" },
+      { name: "Django", icon: "logos:django-icon" },
+      { name: "Flask", icon: "file-icons:flask" },
+      { name: "Node.js", icon: "logos:nodejs" },
+      { name: "Express.js", icon: "skill-icons:expressjs-dark" },
+      { name: "Postgres", icon: "devicon:postgresql" },
+      { name: "MySQL", icon: "logos:mysql" },
+      { name: "MongoDB", icon: "skill-icons:mongodb" },
+      { name: "MariaDB", icon: "logos:mariadb-icon" },
+      { name: "Redis", icon: "logos:redis" },
+      { name: "PHP", icon: "logos:php" },
+    ],
+  },
+  {
+    group: "Cloud & Infrastructure",
+    skills: [
+      { name: "Azure", icon: "logos:microsoft-azure" },
+      { name: "AWS", icon: "skill-icons:aws-light" },
+      { name: "Google Cloud", icon: "logos:google-cloud" },
+      { name: "Docker", icon: "logos:docker-icon" },
+      { name: "VMware", icon: "carbon:logo-vmware" },
+      { name: "Hyper-V", icon: "devicon:hyperv" },
+      { name: "Proxmox", icon: "devicon:proxmox-wordmark" },
+    ],
+  },
+ 
+  {
+    group: "DevOps & Automation",
+    skills: [
+      { name: "Git", icon: "logos:git-icon" },
+      { name: "GitLab", icon: "logos:gitlab" },
+      { name: "GitLab Pipelines", icon: "material-icon-theme:pipeline" },
+      { name: "GitHub", icon: "mdi:github" },
+      { name: "GitHub Actions", icon: "logos:github-actions" },
+      { name: "Python Automation", icon: "file-icons:config-python" },
+      { name: "YAML", icon: "vscode-icons:file-type-yaml-official" },
+      { name: "CI/CD", icon: "clarity:ci-cd-line" },
+    ],
+  },
+  {
+    group: "Security & Networking",
+    skills: [
+      { name: "Traefik", icon: "devicon:traefikproxy" },
+      { name: "Nginx", icon: "material-icon-theme:nginx" },
+      { name: "App Security", icon: "mdi:lock-check-outline" },
+      { name: "Firewall Management", icon: "mdi:firewall" },
+      { name: "Network Configuration", icon: "mdi:network" },
+    ],
+  },
+  {
+    group: "Microsoft Systems",
+    skills: [
+      { name: "Active Directory", icon: "logos:microsoft-icon" },
+      { name: "Exchange Server", icon: "material-icon-theme:email" },
+      { name: "SQL Server", icon: "devicon:microsoftsqlserver" },
+      { name: "Windows Server", icon: "logos:microsoft-windows-icon" },
+      { name: "PowerShell", icon: "vscode-icons:file-type-powershell2" },
+      { name: "Microsoft 365", icon: "hugeicons:office-365" },
+      { name: "Azure AD", icon: "mdi:cloud-access" },
 
-    // Backend
-    { name: "Python", icon: "logos:python" },
-    { name: "Django", icon: "logos:django-icon" },
-    { name: "SQL", icon: "devicon:postgresql" },
-    { name: "PHP", icon: "logos:php" },
-
-    // Cloud & Infrastructure
-    { name: "Azure", icon: "logos:microsoft-azure" },
-    { name: "AWS", icon: "skill-icons:aws-light" },
-    { name: "Docker", icon: "logos:docker-icon" },
-    { name: "Proxmox", icon: "devicon:proxmox-wordmark" },
-    { name: "VMware", icon: "carbon:logo-vmware" },
-    { name: "Hyper-V", icon: "devicon:hyperv" },
-
-    // Microsoft Systems
-    { name: "Active Directory", icon: "logos:microsoft-icon" },
-    { name: "Exchange Server", icon: "material-icon-theme:email" },
-    { name: "SQL Server", icon: "devicon:microsoftsqlserver" },
-    { name: "Firewall Management", icon: "mdi:firewall" },
-    { name: "Windows Server", icon: "logos:microsoft-windows-icon" },
-
-    // DevOps
-    { name: "Git", icon: "logos:git-icon" },
-    { name: "GitHub Actions", icon: "logos:github-actions" },
-    { name: "YAML", icon: "vscode-icons:file-type-yaml-official" },
-    { name: "CI/CD", icon: "clarity:ci-cd-line" },
-
-    // Security
-    { name: "Security Protocols", icon: "mdi:lock-check-outline" },
-  ];
+    ],
+  },
+];
