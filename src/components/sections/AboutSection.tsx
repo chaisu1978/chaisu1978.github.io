@@ -24,7 +24,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       sx={{
         position: "relative",
         width: "100%",
-        minHeight: "75vh",
+        minHeight: "85vh",
         overflow: "hidden",
         borderBottom: "4px solid var(--secondary-700)",
       }}
@@ -119,7 +119,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             </Typography>,
             <Typography key="p" variant="body1" sx={{ mt: 2 }}>
               I’ve worked in tech for over 25 years — building websites at some
-              of Trinidad and Tobago’s first ISPs, then diving into
+              of Trinidad's first ISPs and in the UK, then diving into
               infrastructure, systems management and support. Today, I focus on
               crafting full-stack web applications using modern tools and
               processes; crafting intuitive, reliable, and engaging web
