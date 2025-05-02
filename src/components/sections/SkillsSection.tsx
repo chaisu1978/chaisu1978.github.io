@@ -107,7 +107,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
               },
             }}
           >
-            All Skills
+            All Skills & Technologies
           </Button>
 
           {/* Group Buttons */}

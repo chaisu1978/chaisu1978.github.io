@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { navLinks } from "../../constants/navLinks";
 import { motion } from "framer-motion";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
@@ -131,7 +131,7 @@ export default function MiniDrawerLayout() {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
     setTimeout(() => {
-      handleDrawerClose();
+      // handleDrawerClose();
       setManualActiveSection(undefined); // ✅ Release back to scroll spy after 1s
     }, 300); // Adjust delay if needed
   };
@@ -184,7 +184,7 @@ export default function MiniDrawerLayout() {
             {theme.direction === "rtl" ? (
               <ChevronRightIcon sx={{ color: theme.palette.text.primary }} />
             ) : (
-              <ChevronLeftIcon sx={{ color: theme.palette.text.primary }} />
+              <MenuOpenIcon sx={{ color: theme.palette.text.primary }} />
             )}
           </IconButton>
         </DrawerHeader>

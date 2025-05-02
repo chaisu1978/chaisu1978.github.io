@@ -114,12 +114,12 @@ export default function AboutSection({ id }: AboutSectionProps) {
             <Typography key="h2" variant="h2" gutterBottom>
               Hi, I’m Terrence
             </Typography>,
-            <Typography key="h5" variant="h5">
-              Full-Stack Developer | Designer | Problem Solver
+            <Typography key="h6" variant="h6">
+              Full-Stack Developer | Systems Management | Problem Solver
             </Typography>,
             <Typography key="p" variant="body1" sx={{ mt: 2 }}>
-              I’ve worked in tech for over 25 years — building websites at some
-              of Trinidad's first ISPs and in the UK, then diving into
+              I’ve worked in tech for over 25 years — starting with building
+              websites in Trinidad and the UK, then diving into enterprise
               infrastructure, systems management and support. Today, I focus on
               crafting full-stack web applications using modern tools and
               processes; crafting intuitive, reliable, and engaging web
