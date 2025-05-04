@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { CardActionArea } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const MotionBox = motion(Box as any);
 
@@ -139,7 +140,7 @@ export default function ContactSection({ id }: ContactSectionProps) {
                     opacity: 0.5,
                   }}
                 >
-                  <Icon icon="mdi:open-in-new" fontSize="small" />
+                  <OpenInNewIcon fontSize="small" />
                 </Box>
 
                 <Icon icon="mdi:linkedin" width="48" height="48" />
@@ -197,7 +198,7 @@ export default function ContactSection({ id }: ContactSectionProps) {
                     opacity: 0.5,
                   }}
                 >
-                  <Icon icon="mdi:open-in-new" fontSize="small" />
+                  <OpenInNewIcon fontSize="small" />
                 </Box>
 
                 <Icon icon="mdi:github" width="48" height="48" />
