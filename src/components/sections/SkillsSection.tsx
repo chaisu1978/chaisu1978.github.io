@@ -213,85 +213,94 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
           </Grid>
         </Box>
       </Box>
-      {openSkill && (
-        <Dialog
-          open
-          onClose={() => setOpenSkill(null)}
-          maxWidth="sm"
-          fullWidth
-          PaperProps={{
-            sx: {
-              backgroundColor: "background.default",
-              color: "text.primary",
-              borderRadius: 2,
-              boxShadow: 24,
-              border: "4px solid var(--neutral-600)",
-            },
-          }}
-        >
-          <DialogTitle align="center">
-            <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
-              {openSkill.name}
-            </Typography>
-            <Chip
-              label={openSkill.group}
-              size="small"
-              color="secondary"
-              sx={{ ml: 2 }}
-            />
-
-            <IconButton
-              aria-label="close"
-              onClick={() => setOpenSkill(null)}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
+      <AnimatePresence>
+        {openSkill && (
+          <Dialog
+            open
+            onClose={() => setOpenSkill(null)}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+              component: motion.div,
+              initial: { opacity: 0, scale: 0.95 },
+              animate: { opacity: 1, scale: 1 },
+              exit: { opacity: 0, scale: 0.95 },
+              transition: { duration: 0.3 },
+              sx: {
+                backdropFilter: "blur(12px)",
+                backgroundColor: "rgba(18, 18, 18, 0.06)",
                 color: "text.primary",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-
-          <DialogContent dividers>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Icon icon={openSkill.icon} width="64" height="64" />
-              <Typography variant="body2" align="center">
-                {openSkill.desc}
+                borderRadius: 2,
+                boxShadow: 24,
+                border: "4px solid var(--neutral-600)",
+                overflow: "hidden",
+              },
+            }}
+          >
+            <DialogTitle align="center">
+              <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
+                {openSkill.name}
               </Typography>
-            </Box>
-          </DialogContent>
-
-          {openSkill.url && (
-            <DialogActions sx={{ alignItem: "center" }}>
-              <Button
+              <Chip
+                label={openSkill.group}
                 size="small"
-                component={Link}
-                href={openSkill.url}
-                target="_blank"
-                rel="noopener"
-                variant="text"
+                color="secondary"
+                sx={{ ml: 2 }}
+              />
+
+              <IconButton
+                aria-label="close"
+                onClick={() => setOpenSkill(null)}
                 sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
                   color: "text.primary",
-                  "&:hover": {
-                    color: "text.secondary",
-                  },
                 }}
               >
-                Learn More <OpenInNewIcon sx={{ ml: 0.5 }} />
-              </Button>
-            </DialogActions>
-          )}
-        </Dialog>
-      )}
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+
+            <DialogContent dividers>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Icon icon={openSkill.icon} width="64" height="64" />
+                <Typography variant="body2" align="center">
+                  {openSkill.desc}
+                </Typography>
+              </Box>
+            </DialogContent>
+
+            {openSkill.url && (
+              <DialogActions sx={{ alignItem: "center" }}>
+                <Button
+                  size="small"
+                  component={Link}
+                  href={openSkill.url}
+                  target="_blank"
+                  rel="noopener"
+                  variant="text"
+                  sx={{
+                    color: "text.primary",
+                    "&:hover": {
+                      color: "text.secondary",
+                    },
+                  }}
+                >
+                  Learn More <OpenInNewIcon sx={{ ml: 0.5 }} />
+                </Button>
+              </DialogActions>
+            )}
+          </Dialog>
+        )}
+      </AnimatePresence>
     </Box>
   );
 }

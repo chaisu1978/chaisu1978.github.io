@@ -16,8 +16,8 @@ import {
   Drawer as MuiDrawer,
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { navLinks } from "../../constants/navLinks";
 import { motion } from "framer-motion";
@@ -25,6 +25,7 @@ import { useScrollSpy } from "../../hooks/useScrollSpy";
 
 import AboutSection from "../sections/AboutSection";
 import SkillsSection from "../sections/SkillsSection";
+import ContactSection from "../sections/ContactSection";
 
 const drawerWidth = 200;
 
@@ -150,7 +151,7 @@ export default function MiniDrawerLayout() {
               display: { xs: "none", sm: open ? "none" : "inline-flex" },
             }}
           >
-            <MenuIcon />
+            <LastPageIcon />
           </IconButton>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
@@ -261,19 +262,7 @@ export default function MiniDrawerLayout() {
             <Typography>Some of my work.</Typography>
           </Box>
         </MotionDiv>
-        <MotionDiv
-          id="connect"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Box height={"100vh"} p={3}>
-            <Typography variant="h4" gutterBottom>
-              Connect / Contact
-            </Typography>
-            <Typography>Let's connect!</Typography>
-          </Box>
-        </MotionDiv>
+        <ContactSection id="connect" />
       </Box>
     </Box>
   );

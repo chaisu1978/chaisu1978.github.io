@@ -15,6 +15,12 @@ export const skillsList = [
         url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
       },
       {
+        name: "TypeScript",
+        icon: "logos:typescript-icon",
+        desc: "TypeScript is a strict syntactical superset of JavaScript that adds optional static typing to the language.",
+        url: "https://www.typescriptlang.org/"
+      },
+      {
         name: "CSS3",
         icon: "logos:css-3",
         desc: "Cascading Style Sheets are a style sheet language used for describing the presentation of a document written in HTML or XML.",
@@ -55,12 +61,7 @@ export const skillsList = [
         icon: "devicon:jquery",
         desc: "jQuery is a fast, small, and feature-rich JavaScript library that makes things like HTML document traversal and manipulation, event handling, and animation much simpler.",
         url: "https://jquery.com/" },
-      {
-        name: "TypeScript",
-        icon: "logos:typescript-icon",
-        desc: "TypeScript is a strict syntactical superset of JavaScript that adds optional static typing to the language.",
-        url: "https://www.typescriptlang.org/"
-      },
+
       {
         name: "React",
         icon: "logos:react",
