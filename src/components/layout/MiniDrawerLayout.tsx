@@ -26,6 +26,7 @@ import { useScrollSpy } from "../../hooks/useScrollSpy";
 import AboutSection from "../sections/AboutSection";
 import SkillsSection from "../sections/SkillsSection";
 import ContactSection from "../sections/ContactSection";
+import { useMediaQuery } from "@mui/material";
 
 const drawerWidth = 200;
 
@@ -109,7 +110,15 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawerLayout() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isMobile) {
+      setOpen(false);
+    }
+  }, [isMobile]);
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
