@@ -18,9 +18,9 @@ export const projectsList: ProjectItem[] = [
     type: "Full Stack",
     tech: ["React", "Django", "PostgreSQL", "Docker"],
     image: "/projects/bargain-buddy-thumb.png",
-    github: "https://github.com/chaisu1978/bargain-buddy",
+    github: "https://github.com/chaisu1978/bargainbuddy",
     liveDemo: "https://bbuddy.webworkstt.com/",
-    description: `A full-stack web app where users can search grocery items by name and location, view price trends, and compare stores. Data is parsed from the Ministry of Trade’s XLS sheets. Includes JWT auth, REST API, and SVG logbook export.`,
+    description: `A full-stack web app where users can search grocery items by name and location, view price trends, and compare stores. Data is parsed from the Ministry of Trade’s XLS sheets. Includes JWT auth & REST API.`,
   },
   {
     title: "HOS Trip Planner",
@@ -30,7 +30,7 @@ export const projectsList: ProjectItem[] = [
     image: "/projects/hos-trip-thumb.png",
     github: "https://github.com/chaisu1978/hos-trip-planner",
     liveDemo: "https://hos-trip-planner.vercel.app/",
-    description: `React + Django platform that plans driving routes with FMCSA Hours of Service compliance. Includes daily SVG logbook previews, animated maps, and PDF export. Uses OpenRouteService and JWT-based user accounts.`,
+    description: `React + Django platform that plans driving routes with FMCSA Hours of Service compliance. Includes daily logbook previews, animated maps, and PDF export. Uses OpenRouteService and JWT-based user accounts.`,
   },
   {
     title: "Portfolio Website",

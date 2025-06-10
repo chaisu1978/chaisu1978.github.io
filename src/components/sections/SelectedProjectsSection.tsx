@@ -4,15 +4,15 @@ import {
   Typography,
   Button,
   Grid,
-  useTheme,
-  useMediaQuery,
+  // useTheme,
+  // useMediaQuery,
 } from "@mui/material";
 import { projectsList, ProjectType } from "../../constants/projectsList";
 import ProjectCard from "../projects/ProjectCard";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectModal from "../projects/ProjectModal";
 
-const MotionBox = motion(Box as any);
+// const MotionBox = motion(Box as any);
 
 const filters: (ProjectType | "All")[] = [
   "All",
@@ -25,8 +25,8 @@ export default function SelectedProjectsSection({ id }: { id: string }) {
   const [activeFilter, setActiveFilter] = useState<ProjectType | "All">("All");
   const [openProject, setOpenProject] = useState<number | null>(null);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const filteredProjects =
     activeFilter === "All"
