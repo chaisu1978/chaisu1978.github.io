@@ -33,6 +33,16 @@ export const projectsList: ProjectItem[] = [
     description: `React + Django platform that plans driving routes with FMCSA Hours of Service compliance. Includes daily logbook previews, animated maps, and PDF export. Uses OpenRouteService and JWT-based user accounts.`,
   },
   {
+    title: "Webworkstt.com",
+    summary: "A Django-powered web development and cloud services site.",
+    type: "Full Stack",
+    tech: ["HTML", "JQuery", "Django", "ERP Integration"],
+    image: "/projects/webworks-thumb.png",
+    github: "",
+    liveDemo: "https://webworkstt.com/",
+    description: `Providing web development, cloud services, and design solutions. Offers instant quotations through integration wtih their ERP. Built with Django for the backend and HTML/CSS for the frontend.`,
+  },
+  {
     title: "Portfolio Website",
     summary: "A React + Vite single-page animated resume site.",
     type: "Frontend",
