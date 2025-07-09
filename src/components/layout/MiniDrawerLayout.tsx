@@ -20,20 +20,19 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { navLinks } from "../../constants/navLinks";
-import { motion } from "framer-motion";
+
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 
 import AboutSection from "../sections/AboutSection";
 import SkillsSection from "../sections/SkillsSection";
+import JourneySection from "../sections/JourneySection";
 import ContactSection from "../sections/ContactSection";
 import SelectedProjectsSection from "../sections/SelectedProjectsSection";
 import { useMediaQuery } from "@mui/material";
 
 const drawerWidth = 200;
 
-const MotionDiv = motion.div as React.ComponentType<
-  React.HTMLAttributes<HTMLDivElement> & import("framer-motion").MotionProps
->;
+
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -246,19 +245,7 @@ export default function MiniDrawerLayout() {
         <DrawerHeader />
         <AboutSection id="about" />
         <SkillsSection id="skills" />
-        <MotionDiv
-          id="journey"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Box height={"90vh"} p={3}>
-            <Typography variant="h4" gutterBottom>
-              Journey
-            </Typography>
-            <Typography>My path to where I am today.</Typography>
-          </Box>
-        </MotionDiv>
+        <JourneySection id="journey" />
         <SelectedProjectsSection id="projects" />
         <ContactSection id="connect" />
       </Box>

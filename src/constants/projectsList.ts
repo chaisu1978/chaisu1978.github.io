@@ -29,7 +29,7 @@ export const projectsList: ProjectItem[] = [
     tech: ["React", "Django", "Leaflet", "PostgreSQL"],
     image: "/projects/hos-trip-thumb.png",
     github: "https://github.com/chaisu1978/hos-trip-planner",
-    liveDemo: "https://hos-trip-planner.vercel.app/",
+    liveDemo: "https://hostp.webworkstt.com/",
     description: `React + Django platform that plans driving routes with FMCSA Hours of Service compliance. Includes daily logbook previews, animated maps, and PDF export. Uses OpenRouteService and JWT-based user accounts.`,
   },
   {
@@ -49,7 +49,7 @@ export const projectsList: ProjectItem[] = [
     tech: ["React", "Vite", "Framer Motion", "MUI"],
     image: "/projects/portfolio-thumb.png",
     github: "https://github.com/chaisu1978/chaisu1978.github.io",
-    liveDemo: "https://chaisu1978.github.io/",
+    liveDemo: "",
     description: `Personal portfolio and resume site with smooth animations, side drawer nav, scroll-spy highlighting, responsive layout, and parallax video header. Built using Vite, React, Framer Motion, and Material-UI.`,
   },
 ];
