@@ -8,10 +8,10 @@ interface JourneySectionProps {
     id: string;
   }
 
-const JourneySection: React.FC<JourneySectionProps> = () => {
+const JourneySection: React.FC<JourneySectionProps> = ({id}) => {
     return (
 <MotionDiv
-id="journey"
+id={id}
 initial={{ opacity: 0, y: 40 }}
 whileInView={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.6 }}
