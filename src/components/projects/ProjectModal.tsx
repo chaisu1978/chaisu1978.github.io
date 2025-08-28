@@ -86,7 +86,7 @@ export default function ProjectModal({
           src={project.image}
           alt={project.title}
           sx={{
-            maxWidth: { xs: "100%", md: 240 },
+            maxWidth: { xs: "100%", md: 550 },
             width: "100%",
             borderRadius: 2,
             objectFit: "cover",

@@ -25,7 +25,7 @@ import { useScrollSpy } from "../../hooks/useScrollSpy";
 
 import AboutSection from "../sections/AboutSection";
 import SkillsSection from "../sections/SkillsSection";
-import JourneySection from "../sections/JourneySection";
+// import JourneySection from "../sections/JourneySection";
 import ContactSection from "../sections/ContactSection";
 import SelectedProjectsSection from "../sections/SelectedProjectsSection";
 import { useMediaQuery } from "@mui/material";
@@ -245,7 +245,7 @@ export default function MiniDrawerLayout() {
         <DrawerHeader />
         <AboutSection id="about" />
         <SkillsSection id="skills" />
-        <JourneySection id="journey" />
+        {/* <JourneySection id="journey" /> */}
         <SelectedProjectsSection id="projects" />
         <ContactSection id="connect" />
       </Box>
