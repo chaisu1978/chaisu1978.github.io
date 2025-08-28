@@ -23,6 +23,16 @@ export const projectsList: ProjectItem[] = [
     description: `A full-stack web app where users can search grocery items by name and location, view price trends, and compare stores. Data is parsed from the Ministry of Trade’s XLS sheets. Includes JWT auth & REST API.`,
   },
   {
+    title: "PalGen Palette Generator",
+    summary: "Generate color palettes for UIs by selecting brand colors.",
+    type: "Full Stack",
+    tech: ["React", "Django", "PostgreSQL", "Docker"],
+    image: "/projects/palgen-thumb.png",
+    github: "https://github.com/chaisu1978/palgen",
+    liveDemo: "https://palgen.webworkstt.com/",
+    description: `A React + Django web app that generates color palettes based on user-selected brand colors. Features include saving palettes to user accounts, exporting as images, and viewing palette details like hex/RGB values and accessibility scores.`,
+  },
+  {
     title: "HOS Trip Planner",
     summary: "Plan driver routes with FMCSA-compliant logs and maps.",
     type: "Full Stack",
