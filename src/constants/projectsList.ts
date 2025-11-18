@@ -19,7 +19,7 @@ export const projectsList: ProjectItem[] = [
     tech: ["React", "Django", "PostgreSQL", "Docker"],
     image: "/projects/bargain-buddy-thumb.png",
     github: "https://github.com/chaisu1978/bargainbuddy",
-    liveDemo: "https://bbuddy.webworkstt.com/",
+    liveDemo: "https://bbuddy.app/",
     description: `A full-stack web app where users can search grocery items by name and location, view price trends, and compare stores. Data is parsed from the Ministry of Trade’s XLS sheets. Includes JWT auth & REST API.`,
   },
   {
