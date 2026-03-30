@@ -13,6 +13,16 @@ export interface ProjectItem {
 
 export const projectsList: ProjectItem[] = [
   {
+    title: "All Fours Arena",
+    summary: "Play Trinidad and Tobago's most loved card game with family, friends and bots.",
+    type: "Full Stack",
+    tech: ["React", "Django", "PostgreSQL", "Websocket"],
+    image: "/projects/all-fours-arena.png",
+    github: "",
+    liveDemo: "https://a4a.webworkstt.com/",
+    description: `A full-stack web app where users can search grocery items by name and location, view price trends, and compare stores. Data is parsed from the Ministry of Trade’s XLS sheets. Includes JWT auth & REST API.`,
+  },
+  {
     title: "Bargain Buddy",
     summary: "Compare grocery prices across T&T using public data.",
     type: "Full Stack",
@@ -46,7 +56,7 @@ export const projectsList: ProjectItem[] = [
     title: "Webworkstt.com",
     summary: "A Django-powered web development and cloud services site.",
     type: "Full Stack",
-    tech: ["HTML", "JQuery", "Django", "ERP Integration"],
+    tech: ["HTMX", "Django", "ERP Integration"],
     image: "/projects/webworks-thumb.png",
     github: "",
     liveDemo: "https://webworkstt.com/",

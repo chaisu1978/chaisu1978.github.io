@@ -215,6 +215,64 @@ export default function ContactSection({ id }: ContactSectionProps) {
             </MotionBox>
           </Tooltip>
         </Grid>
+
+        <Grid item xs={12} sm={6} md={3} sx={{ display: "flex" }}>
+          <Tooltip title="Open GitLab profile" placement="top">
+            <MotionBox
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                borderRadius: 2,
+                border: "1px solid var(--neutral-500)",
+                backgroundColor: "background.paper",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <CardActionArea
+                onClick={() =>
+                  window.open("https://git.webworkstt.com/thosang", "_blank")
+                }
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  p: 3,
+                }}
+              >
+                {/* Decorative "open in new tab" icon */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    opacity: 0.5,
+                  }}
+                >
+                  <OpenInNewIcon fontSize="small" />
+                </Box>
+
+                <Icon icon="mdi:gitlab" width="48" height="48" />
+                <Typography variant="h6" sx={{ mt: 1 }}>
+                  GitLab
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ opacity: 0.6, textAlign: "center" }}
+                >
+                  git.webworkstt.com/thosang
+                </Typography>
+              </CardActionArea>
+            </MotionBox>
+          </Tooltip>
+        </Grid>
       </Grid>
 
       {/* Copy feedback */}
