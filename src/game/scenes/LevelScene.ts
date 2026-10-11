@@ -104,15 +104,26 @@ export default class LevelScene extends Phaser.Scene {
     this.incidents = this.physics.add.group();
 
     map.forEach((row, y) => {
+      let runStart = -1;
+      const flushRun = (endX: number) => {
+        if (runStart < 0) return;
+        // one static body per contiguous girder run — no per-tile gaps
+        const w = (endX - runStart) * TILE;
+        const zone = this.add.zone(runStart * TILE + w / 2, y * TILE + TILE / 2, w, TILE);
+        zone.setData("rollDir", this.level.rollDirs[y] ?? 0);
+        this.physics.add.existing(zone, true);
+        this.platforms.add(zone);
+        runStart = -1;
+      };
+
       [...row].forEach((ch, x) => {
         const cx = x * TILE + TILE / 2;
         const cy = y * TILE + TILE / 2;
+        if (ch !== "#") flushRun(x);
         switch (ch) {
           case "#": {
-            const p = this.platforms.create(cx, cy, "tiles", 13) as Phaser.Physics.Arcade.Sprite;
-            p.setScale(2).setData("rollDir", this.level.rollDirs[y] ?? 0);
-            p.setTint(this.level.palette.girder);
-            p.refreshBody();
+            if (runStart < 0) runStart = x;
+            this.add.image(cx, cy, "tiles", 13).setScale(2).setTint(this.level.palette.girder);
             break;
           }
           case "H":
@@ -145,11 +156,13 @@ export default class LevelScene extends Phaser.Scene {
           }
         }
       });
+      flushRun(map[0].length);
     });
 
     this.buildLadderZones(ladderCells);
 
-    this.player = this.physics.add.sprite(spawn.x, spawn.y, "chars", 9);
+    // spawn marker = the row the player stands IN; feet rest on the tile below
+    this.player = this.physics.add.sprite(spawn.x, spawn.y - 6, "chars", 9);
     this.player.setScale(2);
     this.player.setCollideWorldBounds(true);
     const pbody = this.player.body as Phaser.Physics.Arcade.Body;
