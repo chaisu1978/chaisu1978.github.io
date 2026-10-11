@@ -28,7 +28,9 @@ import SkillsSection from "../sections/SkillsSection";
 // import JourneySection from "../sections/JourneySection";
 import ContactSection from "../sections/ContactSection";
 import SelectedProjectsSection from "../sections/SelectedProjectsSection";
+import AdventureTeaserSection from "../sections/AdventureTeaserSection";
 import { useMediaQuery } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 200;
 
@@ -110,6 +112,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawerLayout() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = React.useState(false);
@@ -133,6 +136,10 @@ export default function MiniDrawerLayout() {
   const activeSection = manualActiveSection || observedSection;
 
   const handleNavClick = (id: string) => {
+    if (id === "adventure") {
+      navigate("/adventure");
+      return;
+    }
     setManualActiveSection(id); // Highlight immediately
     const section = document.getElementById(id);
     if (section) {
@@ -247,6 +254,7 @@ export default function MiniDrawerLayout() {
         <SkillsSection id="skills" />
         {/* <JourneySection id="journey" /> */}
         <SelectedProjectsSection id="projects" />
+        <AdventureTeaserSection />
         <ContactSection id="connect" />
       </Box>
     </Box>

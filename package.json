@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && node -e \"fs.copyFileSync('dist/index.html','dist/404.html')\"",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -25,6 +25,7 @@
     "date-fns": "^2.29.3",
     "formik": "^2.4.6",
     "framer-motion": "^11.13.1",
+    "phaser": "^3.90.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
