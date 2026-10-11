@@ -21,6 +21,7 @@ const era1: LevelConfig = {
       "Climb the racks. Reach the server. Claim your MCSE.",
     ],
   },
+  outro: "MCSE claimed. London awaits.",
   next: "era2",
   palette: { bg: "#0a1626", girder: 0xffffff, ladder: 0xffffff },
   hazardSpeed: 110,

@@ -151,9 +151,21 @@ export default class LevelScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.pickups, this.onCollect, undefined, this);
 
     const goalZone = this.add.zone(goal.x, goal.y + 4, TILE * 2, TILE * 2);
-    this.physics.add.existing(goalZone);
+    this.physics.add.existing(goalZone, true);
     this.physics.add.overlap(this.player, goalZone, () => this.complete());
-    this.add.image(goal.x, goal.y + 10, "server").setOrigin(0.5, 1);
+    const server = this.add.image(goal.x, goal.y + 10, "server").setOrigin(0.5, 1);
+    const beacon = this.add
+      .text(goal.x, goal.y - 44, "▼", { fontSize: "20px", color: "#31f7e0" })
+      .setOrigin(0.5, 1);
+    this.tweens.add({
+      targets: beacon,
+      y: beacon.y + 8,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+    this.tweens.add({ targets: server, alpha: 0.65, duration: 900, yoyo: true, repeat: -1 });
 
     this.time.addEvent({
       delay: this.level.hazardDelayMs,
@@ -341,6 +353,25 @@ export default class LevelScene extends Phaser.Scene {
   private complete() {
     if (this.done) return;
     this.done = true;
+    this.flashBanner("LEVEL COMPLETE", "#31f7e0");
+    this.time.delayedCall(1400, () => this.advanceFromComplete());
+  }
+
+  private flashBanner(text: string, color: string) {
+    const banner = this.add
+      .text(400, 140, text, {
+        fontFamily: '"Sora", sans-serif',
+        fontSize: "30px",
+        color,
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setScale(0.6);
+    this.tweens.add({ targets: banner, scale: 1, duration: 300, ease: "Back.easeOut" });
+  }
+
+  private advanceFromComplete() {
     let bonus = 500 + this.uptime * 100;
     const certified = this.skillTotal > 0 && this.skillCollected === this.skillTotal;
     if (certified) bonus += 250;
@@ -349,10 +380,15 @@ export default class LevelScene extends Phaser.Scene {
     const next = this.level.next;
     if (next) {
       const nextIntro = LEVELS[next].intro;
-      this.scene.start("story", {
-        ...nextIntro,
-        lines: [...nextIntro.lines, certified ? "(CERTIFIED — all skills collected)" : ""].filter(Boolean),
-        next: { scene: "level", data: { level: next } },
+      this.scene.start("end", {
+        victory: true,
+        score: this.score,
+        level: this.level.key,
+        subtitle: certified ? "CERTIFIED — all skills collected" : this.level.outro,
+        continueTo: {
+          scene: "story",
+          data: { ...nextIntro, next: { scene: "level", data: { level: next } } },
+        },
       });
     } else {
       this.scene.start("end", {
@@ -367,7 +403,10 @@ export default class LevelScene extends Phaser.Scene {
 
   private gameOver() {
     this.done = true;
-    this.scene.start("end", { victory: false, score: this.score, level: this.level.key });
+    this.flashBanner("SYSTEM DOWN", "#935252");
+    this.time.delayedCall(1400, () =>
+      this.scene.start("end", { victory: false, score: this.score, level: this.level.key })
+    );
   }
 
   private nearestIncident(): Phaser.Physics.Arcade.Sprite | null {

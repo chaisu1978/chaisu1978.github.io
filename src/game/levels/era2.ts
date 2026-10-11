@@ -12,6 +12,7 @@ const era2: LevelConfig = {
       "Grey skies. Full inbox. Survive the contract.",
     ],
   },
+  outro: "Contract delivered. Time to head home.",
   next: "era3",
   palette: { bg: "#14181f", girder: 0x9aa7bd, ladder: 0x8fa8d8 },
   hazardSpeed: 120,

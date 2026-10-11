@@ -12,6 +12,7 @@ const era3: LevelConfig = {
       "Christmas rushes. Keep the lights on.",
     ],
   },
+  outro: "Twenty years logged. One more chapter.",
   next: "era4",
   palette: { bg: "#1a1420", girder: 0xc9b58a, ladder: 0xffffff },
   hazardSpeed: 125,

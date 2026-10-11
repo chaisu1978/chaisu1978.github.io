@@ -6,6 +6,7 @@ interface EndData {
   score: number;
   level: string;
   subtitle?: string;
+  continueTo?: { scene: string; data?: object };
 }
 
 export default class EndScene extends Phaser.Scene {
@@ -21,7 +22,7 @@ export default class EndScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    const { victory, final, score, subtitle } = this.end;
+    const { victory, final, score, subtitle, continueTo } = this.end;
     const headline = victory ? (final ? "JOURNEY COMPLETE" : "LEVEL COMPLETE") : "SYSTEM DOWN";
 
     this.add
@@ -48,8 +49,21 @@ export default class EndScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    let promptText: string;
+    let advance: () => void;
+    if (victory && continueTo) {
+      promptText = "CLICK / ENTER — NEXT ERA     M — MENU";
+      advance = () => this.scene.start(continueTo.scene, continueTo.data);
+    } else if (victory) {
+      promptText = "CLICK / M — MENU";
+      advance = () => this.scene.start("menu");
+    } else {
+      promptText = "CLICK / R — RETRY     M — MENU";
+      advance = () => this.scene.start("level", { level: this.end.level });
+    }
+
     const prompt = this.add
-      .text(width / 2, height - 80, "CLICK / R — RETRY     M — MENU", {
+      .text(width / 2, height - 80, promptText, {
         fontFamily: '"Sora", sans-serif',
         fontSize: "16px",
         color: "#8fa8d8",
@@ -58,11 +72,11 @@ export default class EndScene extends Phaser.Scene {
 
     this.tweens.add({ targets: prompt, alpha: 0.25, duration: 700, yoyo: true, repeat: -1 });
 
-    const retry = () => this.scene.start("level", { level: this.end.level });
     const menu = () => this.scene.start("menu");
 
-    this.input.once("pointerdown", retry);
-    this.input.keyboard?.on("keydown-R", retry);
+    this.input.once("pointerdown", advance);
+    this.input.keyboard?.on("keydown-ENTER", advance);
+    this.input.keyboard?.on("keydown-R", advance);
     this.input.keyboard?.on("keydown-M", menu);
   }
 }

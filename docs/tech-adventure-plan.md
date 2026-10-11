@@ -1,5 +1,16 @@
 # Terrence's Tech Adventure — Design & Build Plan
 
+## Status — updated 2026-10-11
+
+- **Phase 1 (plumbing): DONE** — router, `/adventure` route, lazy chunk, teaser
+  card, nav link, `404.html` predeploy fix.
+- **Phase 2 (core engine): DONE** — ASCII-tilemap level system, run/jump/climb,
+  DK-style rolling hazards, uptime meter, score, story cards, end screens.
+- **Phase 3 (content): DONE** — all four eras playable end-to-end, buff pickups
+  (cert→double jump, coffee→uptime, backup→shield, maintenance window→smash),
+  `R` resolvable incidents (`E` to fix), CERTIFIED all-pickup bonus, era palettes.
+- **Phase 4 (polish): remaining** — see checklist in §5 and §8.
+
 A Donkey Kong–style side-scrolling platformer that plays through Terrence's tech
 career in four eras. Built with Phaser 3 + TypeScript, pixel-art sprites, living
 on its own route (`/adventure`) so it never fights the homepage for keyboard,
@@ -100,16 +111,45 @@ available via Iconify — export needed ones as PNGs into `public/game/`).
 
 ---
 
-## 5. Art & audio
+## 5. Art & audio — Phase 4 asset checklist
 
-- **Tiles/hazards:** Kenney.nl CC0 packs (no attribution) + custom pixel art for
-  CRTs, ticket dialogs, trucks. Era palettes: warm Caribbean → grey London rain →
-  retail fluorescent → modern night-office.
-- **Character:** small sprite sheet (idle/run/jump/climb). Outfit changes per
-  era — '90s tee → London jacket → Courts polo → hoodie.
-- **Audio:** CC0 chiptune loop per era + jump/collect/hit/resolve SFX.
-  Persistent mute toggle. Audio unlocked by the click that starts the game.
-- Tooling: Piskel (free) for sprites; assets land in `public/game/`.
+Current state: all textures are generated placeholders in `BootScene`. Each item
+below is a drop-in replacement — no engine changes needed.
+
+**Sprites needed (pixel art, Piskel/Aseprite/CC0):**
+- [ ] Player sprite sheet: idle, run (4-6f), jump, climb (2-4f) — 24×32
+- [ ] Era outfit variants or palette swaps: '90s tee → London jacket → Courts polo → hoodie
+- [ ] Hazard sprites per era: CRT monitor / error dialog (era1), ticket + pager
+      (era2), batch job + printer jam (era3), merge conflict + truck (era4)
+- [ ] Incident sprite: smoking server / warning ticket (replaces `incident`)
+- [ ] Goal sprites per era: server rack → Exchange server → POS/ERP console → deploy button
+- [ ] Pickup sprites: cert badge, coffee cup, floppy backup, wrench (have
+      placeholders — upgrade to real art)
+- [ ] Girder/tile sets per era + parallax background layers:
+      Trinidad server room → London skyline/rain → retail warehouse → night office
+
+**Audio needed (CC0 — OpenGameArt/Kenney):**
+- [ ] Chiptune loop per era (4 tracks)
+- [ ] SFX: jump, collect, hit, resolve, smash, level-complete jingle, game-over sting
+- [ ] Mute toggle (persist to localStorage)
+
+**Boss set-pieces (one per era, simple scripted patterns):**
+- [ ] Era 1: Server Room Meltdown — hazards rain from above
+- [ ] Era 2: The Y2K Bug — spiral error pattern
+- [ ] Era 3: Christmas Rush Outage — hazard flood + timer pressure
+- [ ] Era 4: Friday 4 PM Prod Deploy — the finale
+
+**UX polish:**
+- [x] Goal beacon (▼ over the server) — done
+- [x] Level-complete screen between eras — done
+- [ ] Difficulty toggle on menu (Casual / SysAdmin)
+- [ ] Touch controls (coarse-pointer: on-screen buttons + optional auto-run)
+- [ ] prefers-reduced-motion: disable screen shake/camera effects
+- [ ] High score in localStorage
+- [ ] Victory screen CTA → scroll to Connect section
+
+Tooling: Piskel (free) for sprites; assets land in `public/game/` — served
+statically, keeps them out of the JS bundle.
 
 ---
 

@@ -2,6 +2,8 @@ export interface LevelConfig {
   key: string;
   title: string;
   intro: { title: string; lines: string[] };
+  /** line shown on the level-complete screen */
+  outro?: string;
   /** level key of the next era, or null for the finale */
   next: string | null;
   palette: { bg: string; girder: number; ladder: number };
