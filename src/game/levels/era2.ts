@@ -1,0 +1,44 @@
+import type { LevelConfig } from "./types";
+
+const era2: LevelConfig = {
+  key: "era2",
+  title: "ERA 2 — LONDON CALLING",
+  intro: {
+    title: "ERA 2 — LONDON CALLING",
+    lines: [
+      "London, early 2000s.",
+      "MCSE in hand, you're contracting across the city —",
+      "systems management, support, the odd Exchange meltdown.",
+      "Grey skies. Full inbox. Survive the contract.",
+    ],
+  },
+  next: "era3",
+  palette: { bg: "#14181f", girder: 0x9aa7bd, ladder: 0x8fa8d8 },
+  hazardSpeed: 120,
+  hazardDelayMs: 2100,
+  hazardCap: 5,
+  rollDirs: { 3: 1, 6: -1, 9: 1, 12: -1, 16: 1 },
+  map: [
+    ".........................",
+    ".........................",
+    "..S................G.....",
+    "####################H####",
+    "....................H....",
+    ".......O..........H......",
+    "####H####################",
+    "....H....................",
+    "....H...............W....",
+    "###############H#########",
+    "...............H.........",
+    "..P............H.........",
+    "#####H#############H#####",
+    ".....H.............H.....",
+    ".....H........C...H......",
+    ".X...H.....R.....H....B..",
+    "#########################",
+    ".........................",
+    ".........................",
+  ],
+};
+
+export default era2;

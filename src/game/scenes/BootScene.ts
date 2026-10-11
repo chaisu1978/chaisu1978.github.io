@@ -41,6 +41,41 @@ export default class BootScene extends Phaser.Scene {
     g.generateTexture("pickup", 16, 16);
     g.clear();
 
+    // cert — gold certification badge (grants double jump)
+    g.fillStyle(0xd7b231, 1).fillCircle(8, 7, 6);
+    g.fillStyle(0xfff3c4, 1).fillCircle(8, 7, 3);
+    g.fillStyle(0x935252, 1).fillTriangle(5, 11, 8, 16, 8, 12).fillTriangle(11, 11, 8, 16, 8, 12);
+    g.generateTexture("cert", 16, 16);
+    g.clear();
+
+    // coffee — restores uptime
+    g.fillStyle(0x936b52, 1).fillRect(3, 5, 9, 9);
+    g.fillStyle(0xf2f2f2, 1).fillRect(5, 6, 5, 2);
+    g.lineStyle(2, 0x936b52).strokeCircle(13, 9, 3);
+    g.fillStyle(0xc7cbd2, 1).fillRect(5, 0, 2, 3).fillRect(9, 0, 2, 3);
+    g.generateTexture("coffee", 16, 16);
+    g.clear();
+
+    // backup — floppy disk, one-hit shield
+    g.fillStyle(0x3a4459, 1).fillRect(1, 1, 14, 14);
+    g.fillStyle(0x97a1b2, 1).fillRect(4, 1, 8, 5);
+    g.fillStyle(0xdbe7ff, 1).fillRect(4, 9, 8, 6);
+    g.generateTexture("backup", 16, 16);
+    g.clear();
+
+    // window — wrench / maintenance window (smash hazards)
+    g.fillStyle(0x97a1b2, 1).fillCircle(8, 5, 4).fillRect(6, 5, 4, 10);
+    g.fillStyle(0x030813, 1).fillRect(5, 2, 6, 4);
+    g.generateTexture("window", 16, 16);
+    g.clear();
+
+    // incident — stationary resolvable ticket
+    g.fillStyle(0x935252, 1).fillRect(2, 2, 16, 16);
+    g.lineStyle(1, 0xb37676).strokeRect(3, 3, 14, 14);
+    g.fillStyle(0xf2f2f2, 1).fillRect(9, 5, 3, 7).fillRect(9, 14, 3, 3);
+    g.generateTexture("incident", 20, 20);
+    g.clear();
+
     // server — the goal rack
     g.fillStyle(0x181f2c, 1).fillRect(0, 0, 28, 40);
     g.lineStyle(2, 0x466399).strokeRect(1, 1, 26, 38);

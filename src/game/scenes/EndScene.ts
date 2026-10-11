@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 interface EndData {
   victory: boolean;
+  final?: boolean;
   score: number;
   level: string;
   subtitle?: string;
@@ -20,10 +21,11 @@ export default class EndScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    const { victory, score, subtitle } = this.end;
+    const { victory, final, score, subtitle } = this.end;
+    const headline = victory ? (final ? "JOURNEY COMPLETE" : "LEVEL COMPLETE") : "SYSTEM DOWN";
 
     this.add
-      .text(width / 2, height / 2 - 110, victory ? "LEVEL COMPLETE" : "SYSTEM DOWN", {
+      .text(width / 2, height / 2 - 110, headline, {
         fontFamily: '"Sora", sans-serif',
         fontSize: "42px",
         color: victory ? "#31f7e0" : "#935252",

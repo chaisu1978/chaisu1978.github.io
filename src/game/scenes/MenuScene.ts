@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { LEVELS } from "../levels";
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -52,17 +53,13 @@ export default class MenuScene extends Phaser.Scene {
       ease: "Sine.easeInOut",
     });
 
-    const start = () =>
+    const start = () => {
+      const intro = LEVELS.era1.intro;
       this.scene.start("story", {
-        title: "ERA 1 — DIAL-UP DAYS",
-        lines: [
-          "Trinidad, late 1990s.",
-          "You're a teenage web dev at the island's ISP —",
-          "dial-up lines humming, NT servers blinking.",
-          "Climb the racks. Reach the server. Claim your MCSE.",
-        ],
+        ...intro,
         next: { scene: "level", data: { level: "era1" } },
       });
+    };
     this.input.once("pointerdown", start);
     this.input.keyboard?.once("keydown", start);
   }
