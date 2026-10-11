@@ -52,7 +52,18 @@ export default class MenuScene extends Phaser.Scene {
       ease: "Sine.easeInOut",
     });
 
-    this.input.once("pointerdown", () => this.scene.start("playground"));
-    this.input.keyboard?.once("keydown", () => this.scene.start("playground"));
+    const start = () =>
+      this.scene.start("story", {
+        title: "ERA 1 — DIAL-UP DAYS",
+        lines: [
+          "Trinidad, late 1990s.",
+          "You're a teenage web dev at the island's ISP —",
+          "dial-up lines humming, NT servers blinking.",
+          "Climb the racks. Reach the server. Claim your MCSE.",
+        ],
+        next: { scene: "level", data: { level: "era1" } },
+      });
+    this.input.once("pointerdown", start);
+    this.input.keyboard?.once("keydown", start);
   }
 }
