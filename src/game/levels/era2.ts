@@ -14,7 +14,7 @@ const era2: LevelConfig = {
   },
   outro: "Contract delivered. Time to head home.",
   next: "era3",
-  palette: { bg: "#14181f", girder: 0x9aa7bd, ladder: 0x8fa8d8 },
+  palette: { bg: "#14181f", girder: 0x9aa7bd, ladder: 0x8fa8d8, bgTile: 8, bgTint: 0x4a5568 },
   hazardSpeed: 120,
   hazardDelayMs: 2100,
   hazardCap: 5,

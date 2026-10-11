@@ -14,7 +14,7 @@ const era3: LevelConfig = {
   },
   outro: "Twenty years logged. One more chapter.",
   next: "era4",
-  palette: { bg: "#1a1420", girder: 0xc9b58a, ladder: 0xffffff },
+  palette: { bg: "#1a1420", girder: 0xc9b58a, ladder: 0xffffff, bgTile: 13, bgTint: 0x6b5a4a },
   hazardSpeed: 125,
   hazardDelayMs: 2000,
   hazardCap: 6,

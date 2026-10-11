@@ -1,10 +1,10 @@
 import Phaser from "phaser";
 import { LEVELS, type LevelConfig } from "../levels";
 
-const TILE = 32;
-const RUN_SPEED = 200;
-const CLIMB_SPEED = 150;
-const JUMP_VELOCITY = -520;
+const TILE = 36; // Kenney 18px tiles @ 2x
+const RUN_SPEED = 225;
+const CLIMB_SPEED = 170;
+const JUMP_VELOCITY = -580;
 const WINDOW_DURATION = 8000;
 const UPTIME_MAX = 3;
 
@@ -14,12 +14,13 @@ const HUD_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   color: "#f2f2f2",
 };
 
-const PICKUP_TEXTURES: Record<string, string> = {
-  P: "pickup",
-  C: "cert",
-  O: "coffee",
-  B: "backup",
-  W: "window",
+// Kenney spritesheet frames (see BootScene preload)
+const PICKUP_SPRITES: Record<string, { tex: string; frame?: number }> = {
+  P: { tex: "tiles", frame: 152 }, // gold coin
+  C: { tex: "tiles", frame: 27 }, // golden key
+  O: { tex: "tiles", frame: 45 }, // heart
+  B: { tex: "tiles", frame: 26 }, // crate
+  W: { tex: "window" }, // generated wrench
 };
 
 const PICKUP_TOASTS: Record<string, string> = {
@@ -82,6 +83,16 @@ export default class LevelScene extends Phaser.Scene {
     this.groundKillY = map.length * TILE;
     this.cameras.main.setBackgroundColor(this.level.palette.bg);
 
+    // era-themed background band (Kenney bg tiles, tinted to palette)
+    const band = this.add
+      .tileSprite(0, 300, 900, 120, "bgs", this.level.palette.bgTile)
+      .setOrigin(0, 0)
+      .setDepth(-1)
+      .setAlpha(0.35)
+      .setTint(this.level.palette.bgTint);
+    band.tileScaleX = 2;
+    band.tileScaleY = 2;
+
     let spawn = { x: 64, y: 400 };
     let goal = { x: 0, y: 0 };
     let spawner = { x: 0, y: 0 };
@@ -98,19 +109,19 @@ export default class LevelScene extends Phaser.Scene {
         const cy = y * TILE + TILE / 2;
         switch (ch) {
           case "#": {
-            const p = this.platforms.create(cx, cy, "girder") as Phaser.Physics.Arcade.Sprite;
-            p.setData("rollDir", this.level.rollDirs[y] ?? 0);
+            const p = this.platforms.create(cx, cy, "tiles", 13) as Phaser.Physics.Arcade.Sprite;
+            p.setScale(2).setData("rollDir", this.level.rollDirs[y] ?? 0);
             p.setTint(this.level.palette.girder);
             p.refreshBody();
             break;
           }
           case "H":
-            this.add.image(cx, cy, "ladder").setTint(this.level.palette.ladder);
             ladderCells.push({ x, y });
             break;
           case "R": {
-            const r = this.incidents.create(cx, cy, "incident") as Phaser.Physics.Arcade.Sprite;
-            (r.body as Phaser.Physics.Arcade.Body).setSize(18, 18);
+            const r = this.incidents.create(cx, cy, "chars", 25) as Phaser.Physics.Arcade.Sprite;
+            r.setScale(1.5);
+            (r.body as Phaser.Physics.Arcade.Body).setSize(20, 20);
             break;
           }
           case "X":
@@ -123,9 +134,10 @@ export default class LevelScene extends Phaser.Scene {
             spawner = { x: cx, y: cy };
             break;
           default: {
-            const texture = PICKUP_TEXTURES[ch];
-            if (texture) {
-              const pk = this.pickups.create(cx, cy, texture) as Phaser.Physics.Arcade.Sprite;
+            const spec = PICKUP_SPRITES[ch];
+            if (spec) {
+              const pk = this.pickups.create(cx, cy, spec.tex, spec.frame) as Phaser.Physics.Arcade.Sprite;
+              pk.setScale(1.5);
               pk.setData("type", ch);
               pk.refreshBody();
               if (ch === "P") this.skillTotal += 1;
@@ -137,9 +149,12 @@ export default class LevelScene extends Phaser.Scene {
 
     this.buildLadderZones(ladderCells);
 
-    this.player = this.physics.add.sprite(spawn.x, spawn.y, "player");
+    this.player = this.physics.add.sprite(spawn.x, spawn.y, "chars", 9);
+    this.player.setScale(2);
     this.player.setCollideWorldBounds(true);
-    (this.player.body as Phaser.Physics.Arcade.Body).setSize(20, 28);
+    const pbody = this.player.body as Phaser.Physics.Arcade.Body;
+    pbody.setSize(13, 21);
+    pbody.setOffset(5.5, 3);
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.eKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
@@ -153,9 +168,11 @@ export default class LevelScene extends Phaser.Scene {
     const goalZone = this.add.zone(goal.x, goal.y + 4, TILE * 2, TILE * 2);
     this.physics.add.existing(goalZone, true);
     this.physics.add.overlap(this.player, goalZone, () => this.complete());
-    const server = this.add.image(goal.x, goal.y + 10, "server").setOrigin(0.5, 1);
+    // goal = door to the next era (two stacked door tiles)
+    const server = this.add.image(goal.x, goal.y + 10, "tiles", 130).setOrigin(0.5, 1).setScale(2);
+    this.add.image(goal.x, goal.y + 10, "tiles", 150).setOrigin(0.5, 0).setScale(2);
     const beacon = this.add
-      .text(goal.x, goal.y - 44, "▼", { fontSize: "20px", color: "#31f7e0" })
+      .text(goal.x, goal.y - 66, "▼", { fontSize: "20px", color: "#31f7e0" })
       .setOrigin(0.5, 1);
     this.tweens.add({
       targets: beacon,
@@ -190,8 +207,15 @@ export default class LevelScene extends Phaser.Scene {
       let start = rows[0];
       let prev = rows[0];
       const flush = (end: number) => {
+        for (let r = start; r <= end; r++) {
+          const frame = r === start ? 51 : 71; // ladder top cap vs mid rung
+          this.add
+            .image(x * TILE + TILE / 2, r * TILE + TILE / 2, "tiles", frame)
+            .setScale(2)
+            .setTint(this.level.palette.ladder);
+        }
         this.ladderZones.push(
-          new Phaser.Geom.Rectangle(x * TILE + 4, start * TILE - 10, TILE - 8, (end - start + 1) * TILE + 18)
+          new Phaser.Geom.Rectangle(x * TILE + 5, start * TILE - 12, TILE - 10, (end - start + 1) * TILE + 20)
         );
       };
       for (let i = 1; i <= rows.length; i++) {
@@ -205,14 +229,14 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   private buildHud() {
-    this.add.rectangle(0, 0, 800, 34, 0x000000, 0.55).setOrigin(0, 0).setScrollFactor(0);
+    this.add.rectangle(0, 0, 900, 34, 0x000000, 0.55).setOrigin(0, 0).setScrollFactor(0);
     this.add.text(12, 8, this.level.title, { ...HUD_STYLE, color: "#8fa8d8" }).setScrollFactor(0);
-    this.uptimeText = this.add.text(390, 8, "", HUD_STYLE).setScrollFactor(0);
+    this.uptimeText = this.add.text(440, 8, "", HUD_STYLE).setScrollFactor(0);
     this.buffText = this.add
-      .text(400, 34, "", { ...HUD_STYLE, fontSize: "12px", color: "#31f7e0" })
+      .text(450, 36, "", { ...HUD_STYLE, fontSize: "12px", color: "#31f7e0" })
       .setOrigin(0.5, 0)
       .setScrollFactor(0);
-    this.scoreText = this.add.text(788, 8, "", HUD_STYLE).setOrigin(1, 0).setScrollFactor(0);
+    this.scoreText = this.add.text(888, 8, "", HUD_STYLE).setOrigin(1, 0).setScrollFactor(0);
     this.resolvePrompt = this.add
       .text(0, 0, "[E] RESOLVE", { fontFamily: '"Sora", sans-serif', fontSize: "11px", color: "#fadbff" })
       .setOrigin(0.5, 1)
@@ -267,9 +291,10 @@ export default class LevelScene extends Phaser.Scene {
 
   private spawnHazard(at: { x: number; y: number }) {
     if (this.done || this.hazards.countActive(true) >= this.level.hazardCap) return;
-    const h = this.hazards.create(at.x, at.y, "hazard") as Phaser.Physics.Arcade.Sprite;
+    const h = this.hazards.create(at.x, at.y, "chars", 8) as Phaser.Physics.Arcade.Sprite;
+    h.setScale(1.5);
     h.setCollideWorldBounds(true);
-    (h.body as Phaser.Physics.Arcade.Body).setCircle(9);
+    (h.body as Phaser.Physics.Arcade.Body).setCircle(11);
     h.setVelocityX(-this.level.hazardSpeed);
     h.setData("bornAt", this.time.now);
   }
@@ -359,7 +384,7 @@ export default class LevelScene extends Phaser.Scene {
 
   private flashBanner(text: string, color: string) {
     const banner = this.add
-      .text(400, 140, text, {
+      .text(450, 140, text, {
         fontFamily: '"Sora", sans-serif',
         fontSize: "30px",
         color,
@@ -452,9 +477,15 @@ export default class LevelScene extends Phaser.Scene {
         this.player.setVelocityY(JUMP_VELOCITY * 0.75);
       }
     } else {
-      if (this.cursors.left.isDown) this.player.setVelocityX(-RUN_SPEED);
-      else if (this.cursors.right.isDown) this.player.setVelocityX(RUN_SPEED);
-      else this.player.setVelocityX(0);
+      if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-RUN_SPEED);
+        this.player.setFlipX(true);
+      } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(RUN_SPEED);
+        this.player.setFlipX(false);
+      } else {
+        this.player.setVelocityX(0);
+      }
 
       if (onGround) {
         this.canAirJump = this.hasDoubleJump;

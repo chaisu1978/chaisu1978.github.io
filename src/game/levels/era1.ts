@@ -23,7 +23,7 @@ const era1: LevelConfig = {
   },
   outro: "MCSE claimed. London awaits.",
   next: "era2",
-  palette: { bg: "#0a1626", girder: 0xffffff, ladder: 0xffffff },
+  palette: { bg: "#0a1626", girder: 0xffffff, ladder: 0xffffff, bgTile: 9, bgTint: 0x334a77 },
   hazardSpeed: 110,
   hazardDelayMs: 2400,
   hazardCap: 5,

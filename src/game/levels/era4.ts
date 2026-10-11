@@ -13,7 +13,7 @@ const era4: LevelConfig = {
     ],
   },
   next: null,
-  palette: { bg: "#030813", girder: 0x7fd6e0, ladder: 0xffffff },
+  palette: { bg: "#030813", girder: 0x7fd6e0, ladder: 0xffffff, bgTile: 9, bgTint: 0x1d3a4a },
   hazardSpeed: 135,
   hazardDelayMs: 1800,
   hazardCap: 6,
