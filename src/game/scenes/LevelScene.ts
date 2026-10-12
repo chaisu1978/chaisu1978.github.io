@@ -41,6 +41,7 @@ export default class LevelScene extends Phaser.Scene {
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private hazards!: Phaser.Physics.Arcade.Group;
   private incidents!: Phaser.Physics.Arcade.Group;
+  private incidentMarkers = new Map<Phaser.Physics.Arcade.Sprite, Phaser.GameObjects.Text>();
   private pickups!: Phaser.Physics.Arcade.StaticGroup;
   private ladderZones: Phaser.Geom.Rectangle[] = [];
   private climbing = false;
@@ -88,6 +89,7 @@ export default class LevelScene extends Phaser.Scene {
     this.windowUntil = 0;
     this.skillTotal = 0;
     this.skillCollected = 0;
+    this.incidentMarkers.clear();
     this.surged = false;
     this.mods = DIFF_MODS[storage.difficulty];
     this.hazardSpeed = this.level.hazardSpeed * this.mods.speed;
@@ -152,6 +154,26 @@ export default class LevelScene extends Phaser.Scene {
             const r = this.incidents.create(cx, cy, "chars", 25) as Phaser.Physics.Arcade.Sprite;
             r.setScale(1.5);
             (r.body as Phaser.Physics.Arcade.Body).setSize(20, 20);
+            // floating "E" flag so players know it's resolvable before proximity
+            const marker = this.add
+              .text(cx, cy - 26, "E", {
+                fontFamily: '"Sora", sans-serif',
+                fontSize: "13px",
+                color: "#fadbff",
+                fontStyle: "bold",
+              })
+              .setOrigin(0.5);
+            if (!this.reducedMotion) {
+              this.tweens.add({
+                targets: marker,
+                y: marker.y - 4,
+                duration: 500,
+                yoyo: true,
+                repeat: -1,
+                ease: "Sine.easeInOut",
+              });
+            }
+            this.incidentMarkers.set(r, marker);
             break;
           }
           case "X":
@@ -592,9 +614,23 @@ export default class LevelScene extends Phaser.Scene {
 
     if (this.climbing && zone) {
       body.allowGravity = false;
+      const left = this.cursors.left.isDown || this.touch.left;
+      const right = this.cursors.right.isDown || this.touch.right;
       this.player.setVelocityY(up ? -CLIMB_SPEED : down ? CLIMB_SPEED : 0);
-      this.player.setVelocityX(0);
-      this.player.x = Phaser.Math.Linear(this.player.x, zone.centerX, 0.2);
+      if (left || right) {
+        // walk off the ladder sideways — leaves the zone, gravity takes over
+        this.player.setVelocityX(left ? -RUN_SPEED * 0.7 : RUN_SPEED * 0.7);
+        this.player.setFlipX(left);
+      } else {
+        this.player.setVelocityX(0);
+        this.player.x = Phaser.Math.Linear(this.player.x, zone.centerX, 0.2);
+      }
+      // reached the floor — step off
+      if (down && body.blocked.down) {
+        this.climbing = false;
+        body.allowGravity = true;
+        this.player.setVelocityY(0);
+      }
       if (ladderJump) {
         this.climbing = false;
         body.allowGravity = true;
@@ -631,6 +667,8 @@ export default class LevelScene extends Phaser.Scene {
       this.resolvePrompt.setPosition(incident.x, incident.y - 14).setVisible(true);
       if (Phaser.Input.Keyboard.JustDown(this.eKey) || this.touchE) {
         incident.destroy();
+        this.incidentMarkers.get(incident)?.destroy();
+        this.incidentMarkers.delete(incident);
         this.score += 75;
         this.refreshHud();
         this.toast("+75 INCIDENT RESOLVED");
