@@ -196,9 +196,11 @@ export default class LevelScene extends Phaser.Scene {
 
     this.buildLadderZones(ladderCells);
 
-    // top girder row → reaching it triggers the boss surge
+    // top girder row → approaching it triggers the boss surge. Margin of a
+    // tile so the surge always fires before the player can overlap the goal zone
+    // (the goal's physics edge sits ~4px above the girder line otherwise).
     const topGirderRow = map.findIndex((row) => row.includes("#"));
-    this.surgeY = (topGirderRow + 1) * TILE;
+    this.surgeY = (topGirderRow + 2) * TILE;
     this.topGirderY = topGirderRow * TILE;
 
     // boss — villain at the top throwing hazards DK-style
@@ -444,7 +446,8 @@ export default class LevelScene extends Phaser.Scene {
     const h = this.hazards.create(at.x, at.y, spec.tex, spec.frame) as Phaser.Physics.Arcade.Sprite;
     h.setScale(spec.scale);
     h.setCollideWorldBounds(true);
-    (h.body as Phaser.Physics.Arcade.Body).setCircle(11);
+    // body must stay narrower than the 36px ladder holes or hazards wedge in them
+    (h.body as Phaser.Physics.Arcade.Body).setCircle(Math.min(11, Math.floor(16.5 / spec.scale)));
     h.setVelocityX(-this.hazardSpeed);
     h.setData("bornAt", this.time.now);
   }
@@ -540,6 +543,13 @@ export default class LevelScene extends Phaser.Scene {
 
   private complete() {
     if (this.done) return;
+    // reached the door before the surge line — a boss with HP fights anyway
+    if (this.bossHp > 0 && !this.surged) {
+      this.surged = true;
+      this.hazardSpeed = this.level.hazardSpeed * 1.3 * this.mods.speed;
+      this.startBossFight();
+      this.flashBanner(`${this.level.boss.name} ENRAGED`, "#f1bcf8");
+    }
     if (this.goalLocked) {
       if (this.time.now - this.lockToastAt > 1500) {
         this.lockToastAt = this.time.now;
@@ -631,6 +641,28 @@ export default class LevelScene extends Phaser.Scene {
         this.spawnIncident(x, this.topGirderY - TILE / 2);
       },
     });
+    // boss takes over hazard duty — lobs attacks itself while it patrols
+    this.spawnEvent.paused = true;
+    this.time.addEvent({ delay: 2400, loop: true, callback: () => this.bossAttack() });
+    if (!this.reducedMotion) {
+      this.tweens.add({
+        targets: this.boss,
+        x: this.boss.x + 60,
+        duration: 1800,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    }
+  }
+
+  /** fight attack — lunge + lob a hazard from the boss's position */
+  private bossAttack() {
+    if (this.done || this.bossHp <= 0) return;
+    if (!this.reducedMotion) {
+      this.tweens.add({ targets: this.boss, y: this.boss.y + 14, duration: 110, yoyo: true });
+    }
+    this.spawnHazard({ x: this.boss.x, y: this.boss.y + 20 });
   }
 
   private refreshBossHp() {
@@ -649,13 +681,21 @@ export default class LevelScene extends Phaser.Scene {
         (child as Phaser.GameObjects.Image).setTint(0xffb0b0)
       )
     );
-    if (this.bossHp > 0) return;
+    if (this.bossHp > 0) {
+      // counterattack — taking damage makes it lob a hazard right back
+      this.bossAttack();
+      return;
+    }
     this.goalLocked = false;
+    // hand hazard duty back to the ambient spawner at normal rate
+    this.spawnEvent.reset({ delay: this.level.hazardDelayMs * this.mods.delay, loop: true, repeat: -1 });
+    this.spawnEvent.paused = false;
     this.bossHpText?.destroy();
     this.beacon?.setText("▼").setColor("#31f7e0").setFontSize(20);
     this.flashBanner(`${this.level.boss.name} PATCHED`, "#31f7e0");
     this.toast("THE DOOR IS OPEN — SHIP IT");
     sfx.win();
+    this.tweens.killTweensOf(this.boss);
     if (!this.reducedMotion) {
       this.tweens.add({
         targets: this.boss,
