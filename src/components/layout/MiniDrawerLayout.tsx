@@ -123,6 +123,16 @@ export default function MiniDrawerLayout() {
     }
   }, [isMobile]);
 
+  // honor deep links like /#connect (e.g. from the game's victory screen)
+  React.useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (id) {
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 400);
+    }
+  }, []);
+
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 

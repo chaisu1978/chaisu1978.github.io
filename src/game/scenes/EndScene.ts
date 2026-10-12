@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { storage } from "../storage";
 
 interface EndData {
   victory: boolean;
@@ -25,6 +26,9 @@ export default class EndScene extends Phaser.Scene {
     const { victory, final, score, subtitle, continueTo } = this.end;
     const headline = victory ? (final ? "JOURNEY COMPLETE" : "LEVEL COMPLETE") : "SYSTEM DOWN";
 
+    const isHigh = score > storage.high;
+    if (isHigh) storage.high = score;
+
     this.add
       .text(width / 2, height / 2 - 110, headline, {
         fontFamily: '"Sora", sans-serif',
@@ -37,6 +41,8 @@ export default class EndScene extends Phaser.Scene {
     const lines = [
       subtitle ?? (victory ? "" : "Too many unhandled exceptions."),
       `SCORE ${String(score).padStart(5, "0")}`,
+      isHigh ? "★ NEW HIGH SCORE ★" : `HIGH SCORE ${String(storage.high).padStart(5, "0")}`,
+      final ? "C — let's connect (back to portfolio)" : "",
     ].filter(Boolean);
 
     this.add
@@ -78,5 +84,10 @@ export default class EndScene extends Phaser.Scene {
     this.input.keyboard?.on("keydown-ENTER", advance);
     this.input.keyboard?.on("keydown-R", advance);
     this.input.keyboard?.on("keydown-M", menu);
+    if (final) {
+      this.input.keyboard?.on("keydown-C", () => {
+        window.location.href = "/#connect";
+      });
+    }
   }
 }

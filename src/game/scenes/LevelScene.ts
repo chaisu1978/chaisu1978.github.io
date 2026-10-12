@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import { LEVELS, type LevelConfig } from "../levels";
+import { sfx } from "../audio";
+import { storage, DIFF_MODS } from "../storage";
 
 const TILE = 36; // Kenney 18px tiles @ 2x
 const RUN_SPEED = 225;
@@ -62,6 +64,11 @@ export default class LevelScene extends Phaser.Scene {
   private surged = false;
   private surgeY = 0;
   private hazardSpeed = 0;
+  private mods = DIFF_MODS.casual;
+  private touch = { left: false, right: false, up: false, down: false };
+  private touchJump = false;
+  private touchE = false;
+  private reducedMotion = false;
 
   constructor() {
     super("level");
@@ -82,7 +89,12 @@ export default class LevelScene extends Phaser.Scene {
     this.skillTotal = 0;
     this.skillCollected = 0;
     this.surged = false;
-    this.hazardSpeed = this.level.hazardSpeed;
+    this.mods = DIFF_MODS[storage.difficulty];
+    this.hazardSpeed = this.level.hazardSpeed * this.mods.speed;
+    this.touch = { left: false, right: false, up: false, down: false };
+    this.touchJump = false;
+    this.touchE = false;
+    this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   create() {
@@ -180,14 +192,16 @@ export default class LevelScene extends Phaser.Scene {
         this.add.image(pt.dx * bossSpec.scale, pt.dy * bossSpec.scale, pt.tex, pt.frame).setScale(bossSpec.scale)
       );
     });
-    this.tweens.add({
-      targets: this.boss,
-      y: this.boss.y - 8,
-      duration: 800,
-      yoyo: true,
-      repeat: -1,
-      ease: "Sine.easeInOut",
-    });
+    if (!this.reducedMotion) {
+      this.tweens.add({
+        targets: this.boss,
+        y: this.boss.y - 8,
+        duration: 800,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    }
     this.add
       .text(spawner.x, spawner.y - 62, bossSpec.name, {
         fontFamily: '"Sora", sans-serif',
@@ -223,24 +237,33 @@ export default class LevelScene extends Phaser.Scene {
     const beacon = this.add
       .text(goal.x, goal.y - 66, "▼", { fontSize: "20px", color: "#31f7e0" })
       .setOrigin(0.5, 1);
-    this.tweens.add({
-      targets: beacon,
-      y: beacon.y + 8,
-      duration: 600,
-      yoyo: true,
-      repeat: -1,
-      ease: "Sine.easeInOut",
-    });
-    this.tweens.add({ targets: server, alpha: 0.65, duration: 900, yoyo: true, repeat: -1 });
+    if (!this.reducedMotion) {
+      this.tweens.add({
+        targets: beacon,
+        y: beacon.y + 8,
+        duration: 600,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+      this.tweens.add({ targets: server, alpha: 0.65, duration: 900, yoyo: true, repeat: -1 });
+    }
 
     this.spawnEvent = this.time.addEvent({
-      delay: this.level.hazardDelayMs,
+      delay: this.level.hazardDelayMs * this.mods.delay,
       loop: true,
       callback: () => this.spawnHazard(spawner),
     });
     this.time.delayedCall(1200, () => this.spawnHazard(spawner));
 
+    this.input.keyboard!.on("keydown-P", () => {
+      if (this.done) return;
+      this.scene.launch("pause");
+      this.scene.pause();
+    });
+
     this.buildHud();
+    if (this.sys.game.device.input.touch) this.buildTouchControls();
   }
 
   private buildLadderZones(cells: { x: number; y: number }[]) {
@@ -275,6 +298,40 @@ export default class LevelScene extends Phaser.Scene {
         prev = rows[i];
       }
     });
+  }
+
+  private buildTouchControls() {
+    const btn = (x: number, y: number, r: number, label: string, on: () => void, off?: () => void) => {
+      this.add
+        .circle(x, y, r, 0xffffff, 0.12)
+        .setScrollFactor(0)
+        .setDepth(90)
+        .setStrokeStyle(2, 0xffffff, 0.3);
+      this.add
+        .text(x, y, label, { fontFamily: '"Sora", sans-serif', fontSize: `${r * 0.9}px`, color: "#f2f2f2" })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(91)
+        .setAlpha(0.6);
+      const zone = this.add
+        .zone(x, y, r * 2.4, r * 2.4)
+        .setScrollFactor(0)
+        .setDepth(92)
+        .setInteractive();
+      zone.on("pointerdown", on);
+      if (off) {
+        zone.on("pointerup", off);
+        zone.on("pointerout", off);
+      }
+    };
+
+    const H = 684;
+    btn(70, H - 60, 38, "◀", () => (this.touch.left = true), () => (this.touch.left = false));
+    btn(180, H - 60, 38, "▶", () => (this.touch.right = true), () => (this.touch.right = false));
+    btn(740, H - 120, 32, "▲", () => (this.touch.up = true), () => (this.touch.up = false));
+    btn(740, H - 40, 32, "▼", () => (this.touch.down = true), () => (this.touch.down = false));
+    btn(845, H - 70, 44, "A", () => (this.touchJump = true));
+    btn(845, H - 160, 26, "E", () => (this.touchE = true));
   }
 
   private buildHud() {
@@ -353,6 +410,9 @@ export default class LevelScene extends Phaser.Scene {
     const type = pk.getData("type") as string;
     pk.destroy();
 
+    if (type === "P") sfx.collect();
+    else sfx.power();
+
     switch (type) {
       case "P":
         this.skillCollected += 1;
@@ -387,6 +447,7 @@ export default class LevelScene extends Phaser.Scene {
       this.score += 100;
       this.refreshHud();
       this.toast("+100 SMASHED");
+      sfx.smash();
       return;
     }
 
@@ -394,11 +455,13 @@ export default class LevelScene extends Phaser.Scene {
       this.hasShield = false;
       this.flashPlayer();
       this.toast("RESTORED FROM BACKUP");
+      sfx.resolve();
       return;
     }
 
     this.uptime -= 1;
     this.refreshHud();
+    sfx.hit();
     if (this.uptime <= 0) {
       this.gameOver();
       return;
@@ -411,6 +474,13 @@ export default class LevelScene extends Phaser.Scene {
 
   private flashPlayer() {
     this.invincible = true;
+    if (this.reducedMotion) {
+      // no flicker — plain timed invincibility window
+      this.time.delayedCall(1400, () => {
+        this.invincible = false;
+      });
+      return;
+    }
     this.tweens.add({
       targets: this.player,
       alpha: 0.25,
@@ -427,6 +497,7 @@ export default class LevelScene extends Phaser.Scene {
   private complete() {
     if (this.done) return;
     this.done = true;
+    sfx.win();
     this.flashBanner("LEVEL COMPLETE", "#31f7e0");
     this.time.delayedCall(1400, () => this.advanceFromComplete());
   }
@@ -477,6 +548,7 @@ export default class LevelScene extends Phaser.Scene {
 
   private gameOver() {
     this.done = true;
+    sfx.lose();
     this.flashBanner("SYSTEM DOWN", "#935252");
     this.time.delayedCall(1400, () =>
       this.scene.start("end", { victory: false, score: this.score, level: this.level.key })
@@ -502,11 +574,14 @@ export default class LevelScene extends Phaser.Scene {
 
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const zone = this.ladderZones.find((z) => z.contains(this.player.x, this.player.y));
-    const up = this.cursors.up.isDown;
-    const down = this.cursors.down.isDown;
+    const up = this.cursors.up.isDown || this.touch.up;
+    const down = this.cursors.down.isDown || this.touch.down;
     const jumpPressed =
       Phaser.Input.Keyboard.JustDown(this.cursors.space) ||
-      Phaser.Input.Keyboard.JustDown(this.cursors.up);
+      Phaser.Input.Keyboard.JustDown(this.cursors.up) ||
+      this.touchJump;
+    const ladderJump = Phaser.Input.Keyboard.JustDown(this.cursors.space) || this.touchJump;
+    this.touchJump = false;
     const onGround = body.blocked.down || body.touching.down;
 
     if (zone && (up || down)) this.climbing = true;
@@ -520,16 +595,17 @@ export default class LevelScene extends Phaser.Scene {
       this.player.setVelocityY(up ? -CLIMB_SPEED : down ? CLIMB_SPEED : 0);
       this.player.setVelocityX(0);
       this.player.x = Phaser.Math.Linear(this.player.x, zone.centerX, 0.2);
-      if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
+      if (ladderJump) {
         this.climbing = false;
         body.allowGravity = true;
         this.player.setVelocityY(JUMP_VELOCITY * 0.75);
+        sfx.jump();
       }
     } else {
-      if (this.cursors.left.isDown) {
+      if (this.cursors.left.isDown || this.touch.left) {
         this.player.setVelocityX(-RUN_SPEED);
         this.player.setFlipX(true);
-      } else if (this.cursors.right.isDown) {
+      } else if (this.cursors.right.isDown || this.touch.right) {
         this.player.setVelocityX(RUN_SPEED);
         this.player.setFlipX(false);
       } else {
@@ -538,10 +614,14 @@ export default class LevelScene extends Phaser.Scene {
 
       if (onGround) {
         this.canAirJump = this.hasDoubleJump;
-        if (jumpPressed) this.player.setVelocityY(JUMP_VELOCITY);
+        if (jumpPressed) {
+          this.player.setVelocityY(JUMP_VELOCITY);
+          sfx.jump();
+        }
       } else if (jumpPressed && this.canAirJump) {
         this.canAirJump = false;
         this.player.setVelocityY(JUMP_VELOCITY * 0.9);
+        sfx.jump();
       }
     }
 
@@ -549,12 +629,14 @@ export default class LevelScene extends Phaser.Scene {
     const incident = this.nearestIncident();
     if (incident) {
       this.resolvePrompt.setPosition(incident.x, incident.y - 14).setVisible(true);
-      if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+      if (Phaser.Input.Keyboard.JustDown(this.eKey) || this.touchE) {
         incident.destroy();
         this.score += 75;
         this.refreshHud();
         this.toast("+75 INCIDENT RESOLVED");
+        sfx.resolve();
       }
+      this.touchE = false;
     } else {
       this.resolvePrompt.setVisible(false);
     }
@@ -562,8 +644,8 @@ export default class LevelScene extends Phaser.Scene {
     // boss surge — reaching the top girder enrages the boss
     if (!this.surged && this.player.y < this.surgeY) {
       this.surged = true;
-      this.spawnEvent.reset({ delay: this.level.hazardDelayMs * 0.45, loop: true, repeat: -1 });
-      this.hazardSpeed = this.level.hazardSpeed * 1.3;
+      this.spawnEvent.reset({ delay: this.level.hazardDelayMs * 0.45 * this.mods.delay, loop: true, repeat: -1 });
+      this.hazardSpeed = this.level.hazardSpeed * 1.3 * this.mods.speed;
       this.boss.setScale(1.15);
       this.boss.iterate((child: Phaser.GameObjects.GameObject) =>
         (child as Phaser.GameObjects.Image).setTint(0xffb0b0)

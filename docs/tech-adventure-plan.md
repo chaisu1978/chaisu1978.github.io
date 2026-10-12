@@ -9,7 +9,12 @@
 - **Phase 3 (content): DONE** — all four eras playable end-to-end, buff pickups
   (cert→double jump, coffee→uptime, backup→shield, maintenance window→smash),
   `R` resolvable incidents (`E` to fix), CERTIFIED all-pickup bonus, era palettes.
-- **Phase 4 (polish): remaining** — see checklist in §5 and §8.
+- **Phase 4 (polish): PARTIAL** — Kenney Pixel Platformer art integrated;
+  procedural Web-Audio SFX + persistent mute; high score, difficulty
+  (Casual/SysAdmin), pause (P / tab-blur auto-pause), victory→Connect CTA
+  (`/#connect` deep link), touch controls, basic reduced-motion. Remaining:
+  real sprite animation, music loops, boss arenas (Option B), gamepad.
+  See checklist in §5 and §6.
 
 A Donkey Kong–style side-scrolling platformer that plays through Terrence's tech
 career in four eras. Built with Phaser 3 + TypeScript, pixel-art sprites, living
@@ -129,9 +134,10 @@ below is a drop-in replacement — no engine changes needed.
       Trinidad server room → London skyline/rain → retail warehouse → night office
 
 **Audio needed (CC0 — OpenGameArt/Kenney):**
-- [ ] Chiptune loop per era (4 tracks)
-- [ ] SFX: jump, collect, hit, resolve, smash, level-complete jingle, game-over sting
-- [ ] Mute toggle (persist to localStorage)
+- [x] SFX: jump, collect, power-up, hit, smash, resolve, win, lose —
+      procedural Web Audio synthesis (`src/game/audio.ts`), no files needed
+- [x] Mute toggle (persist to localStorage) — top-right button on `/adventure`
+- [ ] Chiptune loop per era (4 tracks) — still needs real music assets
 
 **Boss set-pieces (one per era):**
 - [x] Era 1: System Core — orb at the spawner, throws hazards DK-style
@@ -146,11 +152,13 @@ below is a drop-in replacement — no engine changes needed.
 **UX polish:**
 - [x] Goal beacon (▼ over the server) — done
 - [x] Level-complete screen between eras — done
-- [ ] Difficulty toggle on menu (Casual / SysAdmin)
-- [ ] Touch controls (coarse-pointer: on-screen buttons + optional auto-run)
-- [ ] prefers-reduced-motion: disable screen shake/camera effects
-- [ ] High score in localStorage
-- [ ] Victory screen CTA → scroll to Connect section
+- [x] Difficulty toggle on menu (Casual / SysAdmin) — persisted, scales
+      hazard speed/spawn rate (SysAdmin = +15%, Casual = -20%)
+- [x] Touch controls — on-screen ◀ ▶ jump/E buttons (all pointers visible;
+      CSS could restrict to coarse-pointer later)
+- [x] prefers-reduced-motion: disables player flicker, beacon/boss/prompt bobs
+- [x] High score in localStorage — shown on menu + end screens, NEW HIGH banner
+- [x] Victory screen CTA → press C returns to `/#connect` (smooth-scrolls)
 
 Tooling: Piskel (free) for sprites; assets land in `public/game/` — served
 statically, keeps them out of the JS bundle.
@@ -161,13 +169,16 @@ statically, keeps them out of the JS bundle.
 
 - [ ] Phaser + all game code behind `React.lazy` — verify chunk split in build output
 - [ ] StrictMode double-mount: create game in `useEffect`, `game.destroy(true)` in cleanup
-- [ ] Pause on `visibilitychange` and when window blurs
-- [ ] Keyboard: `preventDefault` arrows/space while game focused
-- [ ] Touch controls: on-screen left/right/jump under `(pointer: coarse)`; auto-run option
-- [ ] `prefers-reduced-motion`: disable screen shake / camera effects
-- [ ] Mute + high score persisted to `localStorage`
-- [ ] `predeploy` copies `index.html` → `404.html` for SPA routing on GitHub Pages
-- [ ] End screen funnels to Connect section ("Game Over → let's talk")
+- [x] Pause on `visibilitychange` (auto-pauses any running level scene; resume
+      via PauseScene overlay or `P` toggle)
+- [x] Keyboard: `preventDefault` arrows/space while game focused (dedicated
+      route owns the window)
+- [x] Touch controls: on-screen left/right/jump + E (resolve); `activePointers: 3`
+      for multitouch
+- [x] `prefers-reduced-motion`: disables tweens/flicker (basic pass — expand as needed)
+- [x] Mute + high score + difficulty persisted to `localStorage` (`src/game/storage.ts`)
+- [x] `predeploy` copies `index.html` → `404.html` for SPA routing on GitHub Pages
+- [x] End screen funnels to Connect section ("C — let's connect" → `/#connect`)
 
 ---
 
