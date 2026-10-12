@@ -24,6 +24,16 @@ const era1: LevelConfig = {
   outro: "MCSE claimed. London awaits.",
   next: "era2",
   palette: { bg: "#0a1626", girder: 0xffffff, ladder: 0xffffff, bgTile: 9, bgTint: 0x334a77 },
+  boss: {
+    name: "SYSTEM CORE",
+    scale: 2,
+    parts: [
+      { tex: "tiles", frame: 93, dx: -9, dy: -9 },
+      { tex: "tiles", frame: 94, dx: 9, dy: -9 },
+      { tex: "tiles", frame: 113, dx: -9, dy: 9 },
+      { tex: "tiles", frame: 114, dx: 9, dy: 9 },
+    ],
+  },
   hazardSpeed: 110,
   hazardDelayMs: 2400,
   hazardCap: 5,

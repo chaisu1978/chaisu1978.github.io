@@ -57,6 +57,11 @@ export default class LevelScene extends Phaser.Scene {
   private buffText!: Phaser.GameObjects.Text;
   private resolvePrompt!: Phaser.GameObjects.Text;
   private groundKillY = 0;
+  private boss!: Phaser.GameObjects.Container;
+  private spawnEvent!: Phaser.Time.TimerEvent;
+  private surged = false;
+  private surgeY = 0;
+  private hazardSpeed = 0;
 
   constructor() {
     super("level");
@@ -76,6 +81,8 @@ export default class LevelScene extends Phaser.Scene {
     this.windowUntil = 0;
     this.skillTotal = 0;
     this.skillCollected = 0;
+    this.surged = false;
+    this.hazardSpeed = this.level.hazardSpeed;
   }
 
   create() {
@@ -161,6 +168,35 @@ export default class LevelScene extends Phaser.Scene {
 
     this.buildLadderZones(ladderCells);
 
+    // top girder row → reaching it triggers the boss surge
+    const topGirderRow = map.findIndex((row) => row.includes("#"));
+    this.surgeY = (topGirderRow + 1) * TILE;
+
+    // boss — villain at the top throwing hazards DK-style
+    const bossSpec = this.level.boss;
+    this.boss = this.add.container(spawner.x, spawner.y - 8);
+    bossSpec.parts.forEach((pt) => {
+      this.boss.add(
+        this.add.image(pt.dx * bossSpec.scale, pt.dy * bossSpec.scale, pt.tex, pt.frame).setScale(bossSpec.scale)
+      );
+    });
+    this.tweens.add({
+      targets: this.boss,
+      y: this.boss.y - 8,
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+    this.add
+      .text(spawner.x, spawner.y - 62, bossSpec.name, {
+        fontFamily: '"Sora", sans-serif',
+        fontSize: "11px",
+        color: "#f1bcf8",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5);
+
     // spawn marker = the row the player stands IN; feet rest on the tile below
     this.player = this.physics.add.sprite(spawn.x, spawn.y - 6, "chars", 9);
     this.player.setScale(2);
@@ -197,7 +233,7 @@ export default class LevelScene extends Phaser.Scene {
     });
     this.tweens.add({ targets: server, alpha: 0.65, duration: 900, yoyo: true, repeat: -1 });
 
-    this.time.addEvent({
+    this.spawnEvent = this.time.addEvent({
       delay: this.level.hazardDelayMs,
       loop: true,
       callback: () => this.spawnHazard(spawner),
@@ -299,7 +335,7 @@ export default class LevelScene extends Phaser.Scene {
     const body = h.body as Phaser.Physics.Arcade.Body;
     if (!body.touching.down) return;
     const dir = (platformObj as Phaser.Physics.Arcade.Sprite).getData("rollDir") as number;
-    if (dir) h.setVelocityX(dir * this.level.hazardSpeed);
+    if (dir) h.setVelocityX(dir * this.hazardSpeed);
   }
 
   private spawnHazard(at: { x: number; y: number }) {
@@ -308,7 +344,7 @@ export default class LevelScene extends Phaser.Scene {
     h.setScale(1.5);
     h.setCollideWorldBounds(true);
     (h.body as Phaser.Physics.Arcade.Body).setCircle(11);
-    h.setVelocityX(-this.level.hazardSpeed);
+    h.setVelocityX(-this.hazardSpeed);
     h.setData("bornAt", this.time.now);
   }
 
@@ -521,6 +557,18 @@ export default class LevelScene extends Phaser.Scene {
       }
     } else {
       this.resolvePrompt.setVisible(false);
+    }
+
+    // boss surge — reaching the top girder enrages the boss
+    if (!this.surged && this.player.y < this.surgeY) {
+      this.surged = true;
+      this.spawnEvent.reset({ delay: this.level.hazardDelayMs * 0.45, loop: true, repeat: -1 });
+      this.hazardSpeed = this.level.hazardSpeed * 1.3;
+      this.boss.setScale(1.15);
+      this.boss.iterate((child: Phaser.GameObjects.GameObject) =>
+        (child as Phaser.GameObjects.Image).setTint(0xffb0b0)
+      );
+      this.flashBanner(`${this.level.boss.name} ENRAGED`, "#f1bcf8");
     }
 
     // maintenance window expiry

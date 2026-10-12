@@ -15,6 +15,11 @@ const era3: LevelConfig = {
   outro: "Twenty years logged. One more chapter.",
   next: "era4",
   palette: { bg: "#1a1420", girder: 0xc9b58a, ladder: 0xffffff, bgTile: 13, bgTint: 0x6b5a4a },
+  boss: {
+    name: "POS GREMLIN",
+    scale: 3,
+    parts: [{ tex: "chars", frame: 12, dx: 0, dy: 0 }],
+  },
   hazardSpeed: 125,
   hazardDelayMs: 2000,
   hazardCap: 6,

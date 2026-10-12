@@ -15,6 +15,11 @@ const era2: LevelConfig = {
   outro: "Contract delivered. Time to head home.",
   next: "era3",
   palette: { bg: "#14181f", girder: 0x9aa7bd, ladder: 0x8fa8d8, bgTile: 8, bgTint: 0x4a5568 },
+  boss: {
+    name: "THE Y2K BUG",
+    scale: 3,
+    parts: [{ tex: "chars", frame: 25, dx: 0, dy: 0 }],
+  },
   hazardSpeed: 120,
   hazardDelayMs: 2100,
   hazardCap: 5,

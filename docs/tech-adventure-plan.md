@@ -133,11 +133,15 @@ below is a drop-in replacement — no engine changes needed.
 - [ ] SFX: jump, collect, hit, resolve, smash, level-complete jingle, game-over sting
 - [ ] Mute toggle (persist to localStorage)
 
-**Boss set-pieces (one per era, simple scripted patterns):**
-- [ ] Era 1: Server Room Meltdown — hazards rain from above
-- [ ] Era 2: The Y2K Bug — spiral error pattern
-- [ ] Era 3: Christmas Rush Outage — hazard flood + timer pressure
-- [ ] Era 4: Friday 4 PM Prod Deploy — the finale
+**Boss set-pieces (one per era):**
+- [x] Era 1: System Core — orb at the spawner, throws hazards DK-style
+- [x] Era 2: The Y2K Bug — spiky bug boss
+- [x] Era 3: POS Gremlin — retail boss
+- [x] Era 4: The Deploy Truck — trucking-startup finale
+- [x] Final surge: reaching the top girder enrages the boss
+      (spawn rate ~2.2x, hazard speed +30%)
+- [ ] Future (Option B): real boss arena — HP, attack patterns,
+      win by resolving incidents under pressure
 
 **UX polish:**
 - [x] Goal beacon (▼ over the server) — done
