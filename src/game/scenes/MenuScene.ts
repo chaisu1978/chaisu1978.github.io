@@ -35,22 +35,43 @@ export default class MenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    const eras = [
-      "1. Dial-Up Days — Trinidad ISP, late '90s",
-      "2. London Calling — contractor, early 2000s",
-      "3. The Long Game — Courts / Unicomer",
-      "4. Full-Stack Remote — today",
+    const eras: { key: string; label: string }[] = [
+      { key: "era1", label: "1. Dial-Up Days — Trinidad ISP, late '90s" },
+      { key: "era2", label: "2. London Calling — contractor, early 2000s" },
+      { key: "era3", label: "3. The Long Game — Courts / Unicomer" },
+      { key: "era4", label: "4. Full-Stack Remote — today" },
     ];
 
-    this.add
-      .text(width / 2, height / 2 - 10, eras.join("\n"), {
-        fontFamily: '"Sora", sans-serif',
-        fontSize: "17px",
-        color: "#c7cbd2",
-        align: "center",
-        lineSpacing: 10,
-      })
-      .setOrigin(0.5);
+    const startEra = (key: string) => {
+      const intro = LEVELS[key].intro;
+      this.scene.start("story", {
+        ...intro,
+        next: { scene: "level", data: { level: key } },
+      });
+    };
+
+    eras.forEach((era, i) => {
+      const unlocked = i < storage.unlocked;
+      const t = this.add
+        .text(width / 2, height / 2 - 62 + i * 34, unlocked ? era.label : `${era.label}   [locked]`, {
+          fontFamily: '"Sora", sans-serif',
+          fontSize: "17px",
+          color: unlocked ? "#c7cbd2" : "#4a5568",
+        })
+        .setOrigin(0.5);
+      if (unlocked) {
+        t.setInteractive({ useHandCursor: true });
+        t.on("pointerover", () => t.setColor("#31f7e0"));
+        t.on("pointerout", () => t.setColor("#c7cbd2"));
+        t.on(
+          "pointerdown",
+          (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
+            event.stopPropagation();
+            startEra(era.key);
+          }
+        );
+      }
+    });
 
     this.add
       .text(width / 2, height / 2 + 95, "←→ move · ↑ climb/jump · E resolve · P pause", {

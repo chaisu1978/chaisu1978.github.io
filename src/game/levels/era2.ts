@@ -20,6 +20,7 @@ const era2: LevelConfig = {
     scale: 3,
     parts: [{ tex: "chars", frame: 25, dx: 0, dy: 0 }],
   },
+  hazard: { tex: "chars", frame: 24, scale: 1.5, spin: false }, // ticket bug — pager storms
   hazardSpeed: 120,
   hazardDelayMs: 2100,
   hazardCap: 5,

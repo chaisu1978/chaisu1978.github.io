@@ -70,6 +70,15 @@ export default class LevelScene extends Phaser.Scene {
   private touchJump = false;
   private touchE = false;
   private reducedMotion = false;
+  private animAcc = 0;
+  private animFrame = false;
+  private padHeld = { jump: false, resolve: false, pause: false };
+  private bossHp = 0;
+  private bossHpText: Phaser.GameObjects.Text | null = null;
+  private beacon: Phaser.GameObjects.Text | null = null;
+  private goalLocked = false;
+  private lockToastAt = 0;
+  private topGirderY = 0;
 
   constructor() {
     super("level");
@@ -97,6 +106,14 @@ export default class LevelScene extends Phaser.Scene {
     this.touchJump = false;
     this.touchE = false;
     this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    this.animAcc = 0;
+    this.animFrame = false;
+    this.padHeld = { jump: false, resolve: false, pause: false };
+    this.bossHp = this.level.boss.hp ?? 0;
+    this.bossHpText = null;
+    this.beacon = null;
+    this.goalLocked = false;
+    this.lockToastAt = 0;
   }
 
   create() {
@@ -150,32 +167,9 @@ export default class LevelScene extends Phaser.Scene {
           case "H":
             ladderCells.push({ x, y });
             break;
-          case "R": {
-            const r = this.incidents.create(cx, cy, "chars", 25) as Phaser.Physics.Arcade.Sprite;
-            r.setScale(1.5);
-            (r.body as Phaser.Physics.Arcade.Body).setSize(20, 20);
-            // floating "E" flag so players know it's resolvable before proximity
-            const marker = this.add
-              .text(cx, cy - 26, "E", {
-                fontFamily: '"Sora", sans-serif',
-                fontSize: "13px",
-                color: "#fadbff",
-                fontStyle: "bold",
-              })
-              .setOrigin(0.5);
-            if (!this.reducedMotion) {
-              this.tweens.add({
-                targets: marker,
-                y: marker.y - 4,
-                duration: 500,
-                yoyo: true,
-                repeat: -1,
-                ease: "Sine.easeInOut",
-              });
-            }
-            this.incidentMarkers.set(r, marker);
+          case "R":
+            this.spawnIncident(cx, cy);
             break;
-          }
           case "X":
             spawn = { x: cx, y: cy };
             break;
@@ -205,6 +199,7 @@ export default class LevelScene extends Phaser.Scene {
     // top girder row → reaching it triggers the boss surge
     const topGirderRow = map.findIndex((row) => row.includes("#"));
     this.surgeY = (topGirderRow + 1) * TILE;
+    this.topGirderY = topGirderRow * TILE;
 
     // boss — villain at the top throwing hazards DK-style
     const bossSpec = this.level.boss;
@@ -256,9 +251,10 @@ export default class LevelScene extends Phaser.Scene {
     // goal = door to the next era (two stacked door tiles)
     const server = this.add.image(goal.x, goal.y + 10, "tiles", 130).setOrigin(0.5, 1).setScale(2);
     this.add.image(goal.x, goal.y + 10, "tiles", 150).setOrigin(0.5, 0).setScale(2);
-    const beacon = this.add
+    this.beacon = this.add
       .text(goal.x, goal.y - 66, "▼", { fontSize: "20px", color: "#31f7e0" })
       .setOrigin(0.5, 1);
+    const beacon = this.beacon;
     if (!this.reducedMotion) {
       this.tweens.add({
         targets: beacon,
@@ -417,10 +413,36 @@ export default class LevelScene extends Phaser.Scene {
     if (dir) h.setVelocityX(dir * this.hazardSpeed);
   }
 
+  private spawnIncident(x: number, y: number) {
+    const r = this.incidents.create(x, y, "chars", 25) as Phaser.Physics.Arcade.Sprite;
+    r.setScale(1.5);
+    (r.body as Phaser.Physics.Arcade.Body).setSize(20, 20);
+    const marker = this.add
+      .text(x, y - 26, "E", {
+        fontFamily: '"Sora", sans-serif',
+        fontSize: "13px",
+        color: "#fadbff",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5);
+    if (!this.reducedMotion) {
+      this.tweens.add({
+        targets: marker,
+        y: marker.y - 4,
+        duration: 500,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    }
+    this.incidentMarkers.set(r, marker);
+  }
+
   private spawnHazard(at: { x: number; y: number }) {
     if (this.done || this.hazards.countActive(true) >= this.level.hazardCap) return;
-    const h = this.hazards.create(at.x, at.y, "chars", 8) as Phaser.Physics.Arcade.Sprite;
-    h.setScale(1.5);
+    const spec = this.level.hazard;
+    const h = this.hazards.create(at.x, at.y, spec.tex, spec.frame) as Phaser.Physics.Arcade.Sprite;
+    h.setScale(spec.scale);
     h.setCollideWorldBounds(true);
     (h.body as Phaser.Physics.Arcade.Body).setCircle(11);
     h.setVelocityX(-this.hazardSpeed);
@@ -518,6 +540,13 @@ export default class LevelScene extends Phaser.Scene {
 
   private complete() {
     if (this.done) return;
+    if (this.goalLocked) {
+      if (this.time.now - this.lockToastAt > 1500) {
+        this.lockToastAt = this.time.now;
+        this.toast(`DEPLOY LOCKED — PATCH ${this.bossHp} MORE`);
+      }
+      return;
+    }
     this.done = true;
     sfx.win();
     this.flashBanner("LEVEL COMPLETE", "#31f7e0");
@@ -546,6 +575,8 @@ export default class LevelScene extends Phaser.Scene {
 
     const next = this.level.next;
     if (next) {
+      const order = ["era1", "era2", "era3", "era4"];
+      storage.unlocked = Math.max(storage.unlocked, order.indexOf(next) + 1);
       const nextIntro = LEVELS[next].intro;
       this.scene.start("end", {
         victory: true,
@@ -577,6 +608,67 @@ export default class LevelScene extends Phaser.Scene {
     );
   }
 
+  /** Option B: boss.hp > 0 — door locks, boss spawns incidents; resolving them deals damage */
+  private startBossFight() {
+    this.goalLocked = true;
+    this.beacon?.setText("LOCKED").setColor("#935252").setFontSize(13);
+    this.bossHpText = this.add
+      .text(this.boss.x, this.boss.y - 80, "", {
+        fontFamily: '"Sora", sans-serif',
+        fontSize: "13px",
+        color: "#ffb0b0",
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5);
+    this.refreshBossHp();
+    this.time.addEvent({
+      delay: 2600,
+      loop: true,
+      callback: () => {
+        if (this.done || !this.goalLocked || this.bossHp <= 0) return;
+        if (this.incidents.countActive(true) >= 5) return;
+        const x = Phaser.Math.Between(TILE * 2, 900 - TILE * 2);
+        this.spawnIncident(x, this.topGirderY - TILE / 2);
+      },
+    });
+  }
+
+  private refreshBossHp() {
+    const max = this.level.boss.hp ?? 0;
+    this.bossHpText?.setText(`${"▮".repeat(this.bossHp)}${"▯".repeat(Math.max(0, max - this.bossHp))}`);
+  }
+
+  private damageBoss() {
+    this.bossHp -= 1;
+    this.refreshBossHp();
+    this.boss.iterate((child: Phaser.GameObjects.GameObject) =>
+      (child as Phaser.GameObjects.Image).setTint(0xffffff)
+    );
+    this.time.delayedCall(120, () =>
+      this.boss.iterate((child: Phaser.GameObjects.GameObject) =>
+        (child as Phaser.GameObjects.Image).setTint(0xffb0b0)
+      )
+    );
+    if (this.bossHp > 0) return;
+    this.goalLocked = false;
+    this.bossHpText?.destroy();
+    this.beacon?.setText("▼").setColor("#31f7e0").setFontSize(20);
+    this.flashBanner(`${this.level.boss.name} PATCHED`, "#31f7e0");
+    this.toast("THE DOOR IS OPEN — SHIP IT");
+    sfx.win();
+    if (!this.reducedMotion) {
+      this.tweens.add({
+        targets: this.boss,
+        y: this.boss.y + 70,
+        alpha: 0,
+        duration: 900,
+        ease: "Sine.easeIn",
+      });
+    } else {
+      this.boss.setAlpha(0.3);
+    }
+  }
+
   private nearestIncident(): Phaser.Physics.Arcade.Sprite | null {
     let best: Phaser.Physics.Arcade.Sprite | null = null;
     let bestDist = 72;
@@ -591,18 +683,36 @@ export default class LevelScene extends Phaser.Scene {
     return best;
   }
 
-  update() {
+  update(_time: number, delta: number) {
     if (this.done) return;
+
+    // gamepad: dpad/stick move, A jump, X resolve, Start pause
+    const pad = this.input.gamepad?.getPad(0) ?? null;
+    const padLeft = !!pad && (pad.left || pad.leftStick.x < -0.35);
+    const padRight = !!pad && (pad.right || pad.leftStick.x > 0.35);
+    const padUp = !!pad && (pad.up || pad.leftStick.y < -0.5);
+    const padDown = !!pad && (pad.down || pad.leftStick.y > 0.5);
+    const padJumpNow = pad?.buttons[0]?.pressed ?? false;
+    const padResolveNow = pad?.buttons[2]?.pressed ?? false;
+    const padPauseNow = pad?.buttons[9]?.pressed ?? false;
+    const padJump = padJumpNow && !this.padHeld.jump;
+    const padResolve = padResolveNow && !this.padHeld.resolve;
+    if (padPauseNow && !this.padHeld.pause) {
+      this.scene.launch("pause");
+      this.scene.pause();
+    }
+    this.padHeld = { jump: padJumpNow, resolve: padResolveNow, pause: padPauseNow };
 
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     const zone = this.ladderZones.find((z) => z.contains(this.player.x, this.player.y));
-    const up = this.cursors.up.isDown || this.touch.up;
-    const down = this.cursors.down.isDown || this.touch.down;
+    const up = this.cursors.up.isDown || this.touch.up || padUp;
+    const down = this.cursors.down.isDown || this.touch.down || padDown;
     const jumpPressed =
       Phaser.Input.Keyboard.JustDown(this.cursors.space) ||
       Phaser.Input.Keyboard.JustDown(this.cursors.up) ||
-      this.touchJump;
-    const ladderJump = Phaser.Input.Keyboard.JustDown(this.cursors.space) || this.touchJump;
+      this.touchJump ||
+      padJump;
+    const ladderJump = Phaser.Input.Keyboard.JustDown(this.cursors.space) || this.touchJump || padJump;
     this.touchJump = false;
     const onGround = body.blocked.down || body.touching.down;
 
@@ -614,8 +724,9 @@ export default class LevelScene extends Phaser.Scene {
 
     if (this.climbing && zone) {
       body.allowGravity = false;
-      const left = this.cursors.left.isDown || this.touch.left;
-      const right = this.cursors.right.isDown || this.touch.right;
+      const left = this.cursors.left.isDown || this.touch.left || padLeft;
+      const right = this.cursors.right.isDown || this.touch.right || padRight;
+      this.player.setAngle(0);
       this.player.setVelocityY(up ? -CLIMB_SPEED : down ? CLIMB_SPEED : 0);
       if (left || right) {
         // walk off the ladder sideways — leaves the zone, gravity takes over
@@ -638,14 +749,31 @@ export default class LevelScene extends Phaser.Scene {
         sfx.jump();
       }
     } else {
-      if (this.cursors.left.isDown || this.touch.left) {
+      const runLeft = this.cursors.left.isDown || this.touch.left || padLeft;
+      const runRight = this.cursors.right.isDown || this.touch.right || padRight;
+      if (runLeft) {
         this.player.setVelocityX(-RUN_SPEED);
         this.player.setFlipX(true);
-      } else if (this.cursors.right.isDown || this.touch.right) {
+      } else if (runRight) {
         this.player.setVelocityX(RUN_SPEED);
         this.player.setFlipX(false);
       } else {
         this.player.setVelocityX(0);
+      }
+
+      // fake run cycle — alternate the two character poses + a waddle tilt
+      if ((runLeft || runRight) && onGround) {
+        this.animAcc += delta;
+        if (this.animAcc > 140) {
+          this.animAcc = 0;
+          this.animFrame = !this.animFrame;
+          this.player.setFrame(this.animFrame ? 10 : 9);
+          this.player.setAngle(this.animFrame ? 3 : -3);
+        }
+      } else {
+        this.animAcc = 0;
+        this.player.setFrame(9);
+        this.player.setAngle(0);
       }
 
       if (onGround) {
@@ -665,7 +793,7 @@ export default class LevelScene extends Phaser.Scene {
     const incident = this.nearestIncident();
     if (incident) {
       this.resolvePrompt.setPosition(incident.x, incident.y - 14).setVisible(true);
-      if (Phaser.Input.Keyboard.JustDown(this.eKey) || this.touchE) {
+      if (Phaser.Input.Keyboard.JustDown(this.eKey) || this.touchE || padResolve) {
         incident.destroy();
         this.incidentMarkers.get(incident)?.destroy();
         this.incidentMarkers.delete(incident);
@@ -673,6 +801,7 @@ export default class LevelScene extends Phaser.Scene {
         this.refreshHud();
         this.toast("+75 INCIDENT RESOLVED");
         sfx.resolve();
+        if (this.bossHp > 0) this.damageBoss();
       }
       this.touchE = false;
     } else {
@@ -689,7 +818,15 @@ export default class LevelScene extends Phaser.Scene {
         (child as Phaser.GameObjects.Image).setTint(0xffb0b0)
       );
       this.flashBanner(`${this.level.boss.name} ENRAGED`, "#f1bcf8");
+      sfx.hit();
+      if (this.bossHp > 0) this.startBossFight();
     }
+
+    // "E" markers track their incidents (they settle via gravity)
+    this.incidentMarkers.forEach((m, r) => {
+      if (r.active) m.setPosition(r.x, r.y - 26);
+      else this.incidentMarkers.delete(r);
+    });
 
     // maintenance window expiry
     if (!this.windowActive && this.windowUntil > 0) {
@@ -701,7 +838,8 @@ export default class LevelScene extends Phaser.Scene {
     this.hazards.getChildren().forEach((obj) => {
       const h = obj as Phaser.Physics.Arcade.Sprite;
       const hb = h.body as Phaser.Physics.Arcade.Body;
-      h.rotation += hb.velocity.x * 0.0005;
+      if (this.level.hazard.spin) h.rotation += hb.velocity.x * 0.0005;
+      else h.setFlipX(hb.velocity.x < 0);
       const expired = this.time.now - (h.getData("bornAt") as number) > 20000;
       if (h.y > this.groundKillY + 40 || expired || ((hb.blocked.left || hb.blocked.right) && hb.blocked.down)) {
         h.destroy();

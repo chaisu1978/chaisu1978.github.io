@@ -16,6 +16,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   input: {
     activePointers: 3,
+    gamepad: true,
   },
   scale: {
     mode: Phaser.Scale.FIT,

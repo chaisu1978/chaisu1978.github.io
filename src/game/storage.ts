@@ -2,6 +2,7 @@ const KEY = {
   high: "tta_high",
   muted: "tta_muted",
   difficulty: "tta_difficulty",
+  unlocked: "tta_unlocked",
 };
 
 export type Difficulty = "casual" | "sysadmin";
@@ -29,5 +30,12 @@ export const storage = {
   },
   set difficulty(v: Difficulty) {
     localStorage.setItem(KEY.difficulty, v);
+  },
+  /** highest era index the player may start from (1-based, era order) */
+  get unlocked(): number {
+    return Math.min(4, Math.max(1, Number(localStorage.getItem(KEY.unlocked) ?? 1)));
+  },
+  set unlocked(v: number) {
+    localStorage.setItem(KEY.unlocked, String(v));
   },
 };

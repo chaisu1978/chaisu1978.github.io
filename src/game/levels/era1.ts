@@ -34,6 +34,7 @@ const era1: LevelConfig = {
       { tex: "tiles", frame: 114, dx: 9, dy: 9 },
     ],
   },
+  hazard: { tex: "chars", frame: 8, scale: 1.5, spin: true }, // sawblade — server errors
   hazardSpeed: 110,
   hazardDelayMs: 2400,
   hazardCap: 5,

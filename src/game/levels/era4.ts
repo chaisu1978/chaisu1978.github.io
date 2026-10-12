@@ -18,7 +18,9 @@ const era4: LevelConfig = {
     name: "THE DEPLOY TRUCK",
     scale: 3,
     parts: [{ tex: "chars", frame: 21, dx: 0, dy: 0 }],
+    hp: 5, // Option B fight: resolve incidents to damage; door stays locked
   },
+  hazard: { tex: "chars", frame: 19, scale: 1.8, spin: false }, // truck — merge conflicts
   hazardSpeed: 135,
   hazardDelayMs: 1800,
   hazardCap: 6,

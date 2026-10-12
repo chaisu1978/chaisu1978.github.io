@@ -20,6 +20,7 @@ const era3: LevelConfig = {
     scale: 3,
     parts: [{ tex: "chars", frame: 12, dx: 0, dy: 0 }],
   },
+  hazard: { tex: "chars", frame: 23, scale: 1.5, spin: false }, // bug — batch jobs
   hazardSpeed: 125,
   hazardDelayMs: 2000,
   hazardCap: 6,

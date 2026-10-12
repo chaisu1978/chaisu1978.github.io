@@ -146,8 +146,9 @@ below is a drop-in replacement — no engine changes needed.
 - [x] Era 4: The Deploy Truck — trucking-startup finale
 - [x] Final surge: reaching the top girder enrages the boss
       (spawn rate ~2.2x, hazard speed +30%)
-- [ ] Future (Option B): real boss arena — HP, attack patterns,
-      win by resolving incidents under pressure
+- [x] Option B (era 4): real boss fight — DEPLOY TRUCK has 5 HP, door locks,
+      boss spawns resolvable incidents; each resolve = 1 damage, boss dies →
+      door unlocks. Config-driven (`boss.hp`) — eras 1-3 keep the surge-only boss.
 
 **UX polish:**
 - [x] Goal beacon (▼ over the server) — done
@@ -159,6 +160,10 @@ below is a drop-in replacement — no engine changes needed.
 - [x] prefers-reduced-motion: disables player flicker, beacon/boss/prompt bobs
 - [x] High score in localStorage — shown on menu + end screens, NEW HIGH banner
 - [x] Victory screen CTA → press C returns to `/#connect` (smooth-scrolls)
+- [x] Era-specific hazard sprites — saw (era1), bugs (era2/3), truck (era4)
+- [x] Fake run animation — two-pose cycle + waddle tilt while running
+- [x] Level select — unlocked eras clickable on menu, progress persisted
+- [x] Gamepad — dpad/stick move, A jump, X resolve, Start pause
 
 Tooling: Piskel (free) for sprites; assets land in `public/game/` — served
 statically, keeps them out of the JS bundle.
